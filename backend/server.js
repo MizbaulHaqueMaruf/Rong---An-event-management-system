@@ -7,6 +7,9 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const socket = require("socket.io");
+const adminRoutes = require("./routes/admin.js");
+const dataRoutes = require("./routes/data.js");
+const routesAuth = require("./routes/auth");
 
 const server = http.createServer(app);
 
@@ -134,6 +137,9 @@ app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"))
 app.use("/customerAPI/", require("./routes/CutomerRoutes/users"))
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/dashboard/sellerRoutes"));
+app.use("/api/admins", adminRoutes);
+//app.use("/api/auth", require("./routes/auth"));
+app.use("/api/data", dataRoutes);
 // app.use('/api', require('./routes/dashboard/categoryRoutes'))
 app.use("/api", require("./routes/dashboard/productRoutes"));
 app.get("/", (req, res) => res.send("Hello World!"));
