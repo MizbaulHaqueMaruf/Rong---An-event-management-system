@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import RongLogo from '../assets/ronglogo.jpg'
 import Footer from "../components/Footer"
 import { URL } from '../url'
-
 
 const Register = () => {
 
@@ -38,9 +38,11 @@ const Register = () => {
 
   return (
     <>
-      <div className="bg-gray-200 flex items-center justify-between px-6 md:px-[200px] py-4">
-    <h1 className="text-lg md:text-xl font-extrabold"><Link to="/"></Link></h1>
-    <h3><Link to="/login">Login</Link></h3>
+      <div className="bg-black flex items-center justify-between px-6 md:px-[40px] py-4">
+      <Link to="/">
+          <img src={RongLogo} alt="Rong Logo" className="h-8 cursor-pointer" />
+    </Link>
+    <h3 className='text-white'><Link to="/login">Login</Link></h3>
     </div>
     <div className="w-full flex justify-center items-center h-[80vh] ">
        <div className="flex flex-col justify-center items-center space-y-4 w-[80%] md:w-[25%]">
