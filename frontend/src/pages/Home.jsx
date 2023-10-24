@@ -13,7 +13,7 @@ const Home = () => {
   return (
     <>
       <Navbar />
-      <div className="px-8 md:px-[200px] min-h-[80vh]">
+      <div className="px-8 md:px-[100px] min-h-[80vh] mt-20">
           <Link to={user ? ` ` : "/login"}>
               <HomeFeeds/>
             </Link>
