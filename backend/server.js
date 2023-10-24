@@ -12,7 +12,7 @@ const server = http.createServer(app);
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["http://localhost:3000", "http://localhost:3001","http://localhost:5173"],
     credentials: true,
   })
 );
@@ -130,7 +130,8 @@ io.on("connection", (soc) => {
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"))
+app.use("/customerAPI/", require("./routes/CutomerRoutes/users"))
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/dashboard/sellerRoutes"));
 // app.use('/api', require('./routes/dashboard/categoryRoutes'))
