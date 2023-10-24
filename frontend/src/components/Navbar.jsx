@@ -11,8 +11,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const path = useLocation().pathname;
 
-  // console.log(prompt)
-
   const showMenu = () => {
     setMenu(!menu);
   };
@@ -21,9 +19,9 @@ const Navbar = () => {
 
   return (
     <div className="bg-gray-200 flex items-center justify-between px-6 md:px-[200px] py-4">
-      <h1 className="text-lg md:text-xl font-extrabold">
-        <Link to="/">Rong</Link>
-      </h1>
+      <Link to="/" className="flex items-center">
+        <img src="../assets/ronglogo.jpg" alt="Rong Logo" className="h-8 cursor-pointer" />
+      </Link>
       {path === "/" && (
         <div className="flex justify-center items-center space-x-0">
           <p
