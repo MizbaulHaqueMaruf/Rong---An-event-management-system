@@ -130,7 +130,8 @@ io.on("connection", (soc) => {
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"))
+app.use("/customerAPI/", require("./routes/CutomerRoutes/users"))
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/dashboard/sellerRoutes"));
 // app.use('/api', require('./routes/dashboard/categoryRoutes'))
