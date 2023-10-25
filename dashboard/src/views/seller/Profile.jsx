@@ -143,25 +143,25 @@ const Profile = () => {
                     />
                   </div>
                   <div className="flex flex-col w-full gap-1">
-                    <label htmlFor="div">Division/State</label>
+                    <label htmlFor="div">Country</label>
                     <input
                       value={state.division}
                       onChange={inputHandle}
                       className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#283046] border border-slate-700 rounded-md text-[#d0d2d6]"
                       type="text"
-                      placeholder="Division/State"
+                      placeholder="Country"
                       name="division"
                       id="div"
                     />
                   </div>
                   <div className="flex flex-col w-full gap-1 mb-3">
-                    <label htmlFor="district">District</label>
+                    <label htmlFor="district">Division/State</label>
                     <input
                       value={state.district}
                       onChange={inputHandle}
                       className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#283046] border border-slate-700 rounded-md text-[#d0d2d6]"
                       type="text"
-                      placeholder="District"
+                      placeholder="Division/State"
                       name="district"
                       id="district"
                     />
