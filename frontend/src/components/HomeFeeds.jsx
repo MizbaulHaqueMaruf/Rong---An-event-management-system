@@ -1,16 +1,14 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import image1 from "../assets/3rd_National_Science_Festival.jpg";
-import image2 from "../assets/image_of Hackathon.jpg";
+import image2 from "../assets/GeorgeStrait_concert.jpg";
+
 const EventCard = ({ event }) => (
-  <div className="w-full md:w-1/2 lg:w-1/3 p-2 md:p-4">
+  <div className="w-full md:w-1/2 lg:w-1/3 p-2 md:p-4"> {/* Adjust padding */}
     <div className="bg-white rounded-lg shadow-md">
-      <img src={event.id === 1 ? image1 : image2} alt={event.title} className="w-full h-32 md:h-48 object-cover rounded-t-lg" />
+      {/* Use the imported images */}
+      <img src={event.id === 1 ? image1 : image2} alt={event.title} className="w-full h-32 md:h-48 object-cover rounded-t-lg" /> {/* Adjust image size */}
       <div className="p-4">
-        {/* Wrap the title in a Link */}
-        <Link to="/eventdetails" className="hover:underline">
-          <h2 className="text-lg md:text-xl font-bold mb-2">{event.title}</h2>
-        </Link>
+        <h2 className="text-lg md:text-xl font-bold mb-2">{event.title}</h2> {/* Adjust text size */}
         <p className="text-sm text-gray-500">@{event.event_organizer}</p>
         <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
           <p>{event.updatedAt.toLocaleDateString()}</p>
@@ -43,10 +41,10 @@ const HomeFeeds = () => {
     },
     {
       id: 2,
-      title: "SIH Intra Hackathon Festival",
+      title: "George Strait Epic Concert",
       event_organizer: "GS Foundation",
       updatedAt: new Date(), // Make sure updatedAt is a valid date
-      desc: "Hackathon festival",
+      desc: "One of the greatest concerts of a lifetime",
     },
   ];
 

@@ -29,9 +29,9 @@ const Navbar = () => {
             onClick={() =>
               navigate(prompt ? "?search=" + prompt : navigate("/"))
             }
-            className="cursor-pointer text-white hover:text-blue-500" // Added styling here
+            className="cursor-pointer"
           >
-            <BsSearch className="text-white text-xl" /> {/* Increased icon size */}
+            <BsSearch className="text-white" />
           </p>
           <input
             onChange={(e) => setPrompt(e.target.value)}
@@ -54,7 +54,7 @@ const Navbar = () => {
         {user ? (
           <div onClick={showMenu}>
             <p className="cursor-pointer relative">
-              <FaBars className="text-white text-xl" /> {/* Increased icon size */}
+              <FaBars className="text-white" />
             </p>
             {menu && <Menu />}
           </div>
@@ -66,7 +66,7 @@ const Navbar = () => {
       </div>
       <div onClick={showMenu} className="md:hidden text-lg">
         <p className="cursor-pointer relative">
-          <FaBars className="text-white text-xl" /> {/* Increased icon size */}
+          <FaBars className="text-white" />
         </p>
         {menu && <Menu />}
       </div>
