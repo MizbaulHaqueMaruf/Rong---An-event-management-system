@@ -1,7 +1,7 @@
 import "leaflet/dist/leaflet.css"; // Import the Leaflet CSS
 import { useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import image1 from "../assets/3rd_National_Science_Festival.jpg";
+import image1 from "../assets/image_of_Chittagong_SC.jpg";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
@@ -100,7 +100,7 @@ const EventDetails = () => {
           Event Description
         </div>
         <div className="max-h-60 overflow-y-auto">
-          The Walton 3rd National Science Fair is a prestigious and innovative scientific event that celebrates and showcases the remarkable achievements and discoveries of budding scientists, researchers, and inventors from all across the nation. This fair provides a platform for young minds to explore the wonders of science, technology, and innovation, fostering a spirit of curiosity and creativity.
+          CUSS presents National Science Fair is a prestigious and innovative scientific event that celebrates and showcases the remarkable achievements and discoveries of budding scientists, researchers, and inventors from all across the nation. This fair provides a platform for young minds to explore the wonders of science, technology, and innovation, fostering a spirit of curiosity and creativity.
           Participants at the fair have the opportunity to present their scientific projects, experiments, and inventions to a diverse audience, which includes experts, educators, and fellow enthusiasts. The event serves as a melting pot of knowledge, where attendees can learn about a wide range of scientific disciplines, from biology and physics to engineering and environmental science.
         </div>
       </div>
