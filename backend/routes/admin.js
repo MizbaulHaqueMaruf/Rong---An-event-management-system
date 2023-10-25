@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/signup", async (req, res) => {
   try {
-    const { error } = validateAdmin(req.body);
+    const { error } = (req.body);
     if (error) return res.status(400).send({ message: error.details[0].message });
 
     const admin = await Admin.findOne({ email: req.body.email });
@@ -50,8 +50,11 @@ router.post("/login", async (req, res) => {
 
 const validateAdmin = (data) => {
   const schema = Joi.object({
+    name:Joi.string().required().label("Name"),
+    number: Joi.string().required().label("Number"),
     email: Joi.string().email().required().label("Email"),
-    password: Joi.string().required().label("Password"),
+    role: Joi.string().required().label("Role"),
+    password:passwordComplexity().required().label("Password")
   });
   return schema.validate(data);
 };
