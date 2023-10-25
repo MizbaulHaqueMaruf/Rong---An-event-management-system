@@ -15,7 +15,7 @@ const Home = () => {
       <Navbar />
       <div className="px-8 md:px-[100px] min-h-[80vh] mt-20">
       <div className="text-2xl font-semibold mb-4">Top Events</div>
-          <Link to={user ?   : "/login"}>
+          <Link to={user ? ` `  : "/login"}>
               <HomeFeeds/>
             </Link>
       </div>
