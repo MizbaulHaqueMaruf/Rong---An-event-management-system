@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import HomeFeeds from "../components/HomeFeeds";
 import Navbar from "../components/Navbar";
 import { UserContext } from "../context/UserContext";
-import About from "../components/about";
+
 const Home = () => {
   const { user } = useContext(UserContext);
 
@@ -13,10 +13,9 @@ const Home = () => {
   return (
     <>
       <Navbar />
-      <About/>
-
-      <div className="px-8 md:px-[200px] min-h-[80vh]">
-          <Link to={user ? ` ` : "/login"}>
+      <div className="px-8 md:px-[100px] min-h-[80vh] mt-20">
+      <div className="text-2xl font-semibold mb-4">Top Events</div>
+          <Link to={user ?   : "/login"}>
               <HomeFeeds/>
             </Link>
       </div>
