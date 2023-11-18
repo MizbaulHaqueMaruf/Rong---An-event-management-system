@@ -1,0 +1,53 @@
+/* About.css */
+.about-container {
+    text-align: center;
+  }
+  
+  .about-header {
+    font-size: 3.3rem;
+    font-weight: bold;
+    color: #6e6840;
+    margin-bottom: 10px;
+    transition: color 0.3s, transform 0.3s, text-shadow 0.3s; /* Add text-shadow transition */
+    cursor: pointer;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+  }
+  
+  .about-header:hover {
+    color: #aa6613;
+    transform: scale(1.1);
+    text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3); /* Modify shadow on hover */
+  }
+  
+  .about-section {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .about-segment {
+    flex: 1;
+    padding: 20px;
+    background-color: #efeee3;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .about-segment:hover {
+    background-color: #cdbf72; /* Change the background color on hover */
+    transform: scale(1.05); /* Apply a scale effect on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Modify box shadow on hover */
+  }
+  
+  .segment-header {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #29335c;
+    margin-bottom: 10px;
+  }
+  
+  .about-segment p {
+    font-size: 1.2rem;
+    color: #555;
+  }
+  

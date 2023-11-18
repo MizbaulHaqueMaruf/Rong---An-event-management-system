@@ -1,0 +1,34 @@
+.approved-organizations-container {
+    width: 400px; /* Adjust the width as needed */
+    margin: 60px auto; /* Center the box horizontally */
+    border: 2px solid #1d2634; /* Border style and color */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Spacing inside the box */
+    background-color: #f0f0f0; /* Background color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+  }
+  
+  .approved-organizations-container h1 {
+    color: #1d2634; /* Title text color */
+    font-size: 24px; /* Title font size */
+    text-align: center; /* Center the title text */
+    margin-bottom: 20px; /* Spacing below the title */
+  }
+  
+  .approved-organizations-list {
+    list-style: none; /* Remove default list bullets */
+    padding: 0; /* Remove default list padding */
+  }
+  
+  .approved-organizations-list li {
+    font-size: 18px; /* List item font size */
+    margin-bottom: 10px; /* Spacing between list items */
+  }
+  
+  /* Style for hover effect on list items */
+  .approved-organizations-list li:hover {
+    color: #007bff; /* Change text color on hover */
+    cursor: pointer; /* Show pointer cursor on hover */
+    text-decoration: underline; /* Add underline on hover */
+  }
+  
