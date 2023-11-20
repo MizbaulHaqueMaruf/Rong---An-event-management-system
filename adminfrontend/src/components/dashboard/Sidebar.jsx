@@ -43,11 +43,11 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
                 </a>
             </li> 
             
-            <li className='sidebar-list-item'>
+            {/* <li className='sidebar-list-item'>
                 <a href="">
                     <BsFillGearFill className='icon'/> Settings
                 </a>
-            </li>
+            </li> */}
             <li className='sidebar-list-item'>
                 <a href="/category">
                 <BsFillFolderFill className='icon'/> Categories
