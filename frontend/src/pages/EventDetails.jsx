@@ -1,18 +1,52 @@
 import "leaflet/dist/leaflet.css"; // Import the Leaflet CSS
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import image1 from "../assets/Dhaka_folk_fest.jpg";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-
+import { UserContext } from "../context/UserContext";
 // event details with id needs to be done here 
 
 const EventDetails = () => {
+  const {isLoggedIn, userId } = useContext(UserContext);
   const [activeTab, setActiveTab] = useState("home");
   const [eventData, setEventData] = useState(null);
   const { id } = useParams();
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentFailure, setPaymentFailure] = useState(false);
+  const navigate = useNavigate();
 
+  const handlePayNow = async () => {
+    try {
+      if(!isLoggedIn) {
+            navigate('/login');
+            return;
+      }
+      // Make a POST request to the backend to create an order
+      const response = await fetch('http://localhost:5000/eventAPI/Customer/orderEvent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventTitle: eventData.name,
+          eventOrganizer: eventData.orgName,
+          eventId : eventData._id,
+          UserId: userId,
+        }),
+      });
+
+      if (response.ok) {
+        setPaymentSuccess(true); // Show success pop-up
+      } else {
+        setPaymentFailure(true); // Show failure pop-up
+      }
+    } catch (error) {
+      console.error('Error during payment:', error);
+      setPaymentFailure(true); // Show failure pop-up
+    }
+  };
   useEffect(() => {
     console.log("Fetching event details for ID:", id);
   
@@ -147,10 +181,53 @@ const EventDetails = () => {
                 Bkash or Nagad. Use any method you prefer.
               </p>
               <div className="mt-4">
-                <button className="bg-blue-500 text-white py-2 px-4 rounded">
+                <button className="bg-blue-500 text-white py-2 px-4 rounded" onClick={handlePayNow}>
                   Pay Now
                 </button>
               </div>
+              {/* Pop-up for payment success */}
+      {paymentSuccess && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+          <div className="relative w-auto max-w-sm mx-auto my-6">
+            <div className="bg-white rounded shadow-lg p-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">Payment Successful!</h3>
+                <p>Your order has been placed successfully.</p>
+              </div>
+              <div className="text-center mt-4">
+                <button
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
+                  onClick={() => setPaymentSuccess(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pop-up for payment failure */}
+      {paymentFailure && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+          <div className="relative w-auto max-w-sm mx-auto my-6">
+            <div className="bg-white rounded shadow-lg p-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">Payment Unsuccessful!</h3>
+                <p>There was an issue processing your payment. Please try again later.</p>
+              </div>
+              <div className="text-center mt-4">
+                <button
+                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none"
+                  onClick={() => setPaymentFailure(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
             </div>
           </div>
         )}

@@ -1,6 +1,6 @@
 const events = require("../../models/eventModel");
 const sellers = require("../../models/sellerModel");
-
+const Order = require("../../models/Order");
 
 const getEvents = async (req, res) => {
   try {
@@ -43,4 +43,34 @@ const getEventbyID = async (req, res)=>{
     res.status(500).json({ error: error.message });
   }
 };
-module.exports = {getEvents, searchEvents, getEventbyID};
+
+const createOrder = async (req, res) =>{
+  try {
+    const { eventId, eventTitle, eventOrganizer, UserId} = req.body;
+    const ticketId = generateRandomId(); // Function to generate a random ticket ID
+    const eventDate = new Date().toISOString().split('T')[0]; // Get current date
+
+    // Create the order in the database
+    const newOrder = new Order({
+      eventId,
+      eventTitle,
+      eventOrganizer,
+      ticketId,
+      eventDate,
+      UserId,
+    });
+
+    await newOrder.save(); // Save the new order
+
+    res.status(201).json({ message: 'Order created successfully' });
+  } catch (error) {
+    console.error('Error creating order:', error);
+    res.status(500).json({ message: 'Failed to create order' });
+  }
+}
+
+function generateRandomId() {
+  return Math.random().toString(36).substr(2, 9); // Random alphanumeric ID
+}
+
+module.exports = {getEvents, searchEvents, getEventbyID, createOrder};
