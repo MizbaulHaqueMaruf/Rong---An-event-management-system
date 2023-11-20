@@ -12,6 +12,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const path = useLocation().pathname;
 
+  const handleSearch = () => {
+    if (prompt) {
+      navigate(`/search/${prompt}`);
+    }
+  };
+
   const showMenu = () => {
     setMenu(!menu);
   };
@@ -25,12 +31,7 @@ const Navbar = () => {
       </Link>
       {path === "/" && (
         <div className="flex justify-center items-center space-x-1 ml-2"> {/* Increased margin to ml-4 */}
-          <p
-            onClick={() =>
-              navigate(prompt ? "?search=" + prompt : navigate("/"))
-            }
-            className="cursor-pointer"
-          >
+          <p onClick={handleSearch} className="cursor-pointer">
             <BsSearch className="text-white" />
           </p>
           <input
