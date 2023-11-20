@@ -137,19 +137,10 @@ io.on("connection", (soc) => {
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-<<<<<<< Updated upstream
-app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"));
-app.use("/customerAPI/", require("./routes/CutomerRoutes/users"));
-=======
-<<<<<<< HEAD
+
 app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"))
 app.use("/userAPI/", require("./routes/CutomerRoutes/users"))
 app.use("/eventAPI/", require("./routes/CutomerRoutes/events"))
-=======
-app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"));
-app.use("/customerAPI/", require("./routes/CutomerRoutes/users"));
->>>>>>> dbadf182700682895a6f21ab7e77041a8586497a
->>>>>>> Stashed changes
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/dashboard/sellerRoutes"));
 app.use("/api/admins", adminRoutes);
