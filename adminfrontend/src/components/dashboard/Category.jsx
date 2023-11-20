@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from "./Sidebar";
 import Header from './Header';
 import './App.css';
+import './Category.css';
 
 function Category() {
     const [categories, setCategories] = useState([]);
@@ -49,10 +50,10 @@ function Category() {
                 <Header />
                 <Sidebar />
                 <div className="main-content">
-                    <h2>Add Category</h2>
+                    <h1>All Categories</h1>
                     <form onSubmit={handleCategorySubmit}>
-                        <label>
-                            Category Name:
+                        <label style={{marginTop:'30px'}}>
+                            Category Name: 
                             <input
                                 type="text"
                                 value={newCategory}
@@ -71,9 +72,9 @@ function Category() {
                     </form>
 
                     <h2>Categories</h2>
-                    <ul>
+                    <ul className="category-list">
                         {categories.map((category) => (
-                            <li key={category._id}>
+                            <li key={category._id} className="category-card">
                                 <img src={category.image} alt={category.name} />
                                 {category.name}
                             </li>
