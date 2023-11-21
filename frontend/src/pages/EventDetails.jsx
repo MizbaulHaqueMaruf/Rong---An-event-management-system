@@ -1,22 +1,72 @@
 import "leaflet/dist/leaflet.css"; // Import the Leaflet CSS
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import image1 from "../assets/image_of_Chittagong_SC.jpg";
+import { useNavigate, useParams } from "react-router-dom";
+import image1 from "../assets/Dhaka_folk_fest.jpg";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import { UserContext } from "../context/UserContext";
+// event details with id needs to be done here 
 
 const EventDetails = () => {
+  const {isLoggedIn, userId } = useContext(UserContext);
   const [activeTab, setActiveTab] = useState("home");
+  const [eventData, setEventData] = useState(null);
+  const { id } = useParams();
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentFailure, setPaymentFailure] = useState(false);
+  const navigate = useNavigate();
 
+  const handlePayNow = async () => {
+    try {
+      if(!isLoggedIn) {
+            navigate('/login');
+            return;
+      }
+      // Make a POST request to the backend to create an order
+      const response = await fetch('http://localhost:5000/eventAPI/Customer/orderEvent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventTitle: eventData.name,
+          eventOrganizer: eventData.orgName,
+          eventId : eventData._id,
+          UserId: userId,
+        }),
+      });
+
+      if (response.ok) {
+        setPaymentSuccess(true); // Show success pop-up
+      } else {
+        setPaymentFailure(true); // Show failure pop-up
+      }
+    } catch (error) {
+      console.error('Error during payment:', error);
+      setPaymentFailure(true); // Show failure pop-up
+    }
+  };
+  useEffect(() => {
+    console.log("Fetching event details for ID:", id);
+  
+    fetch(`http://localhost:5000/eventAPI/Customer/events/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Received data:", data);
+        setEventData(data);
+      })
+      .catch((error) => console.error("Error fetching event details:", error));
+  }, [id]);  
   return (
     <div>
       <Navbar />
       <div className="relative h-1/3">
-        <img
-          src={image1}
-          alt="Event"
-          className="w-full h-full object-cover"
-        />
+      <img
+        src={eventData?.images && eventData.images.length > 0 ? eventData.images[0] : image1}
+        alt={eventData?.name || 'Event Image'}
+        className="w-full h-32 md:h-48 object-cover rounded-t-lg"
+      />
       </div>
 
       <div className="mt-6">
@@ -67,7 +117,7 @@ const EventDetails = () => {
     <div className="w-1/4 ml-10 mr-20">
       <div className="bg-white p-4 rounded shadow">
         <div className="text-2xl text-center font-bold text-black mb-4 rounded shadow-2xl">
-          Event Time
+          Time
         </div>
         <div className="text-center">12:00 PM - 3:00 PM</div>
       </div>
@@ -88,7 +138,7 @@ const EventDetails = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <Marker position={[51.505, -0.09]}>
-              <Popup>Event Location</Popup>
+              <Popup>Location</Popup>
             </Marker>
           </MapContainer>
         </div>
@@ -97,11 +147,10 @@ const EventDetails = () => {
     <div className="w-3/4 ml-100">
       <div className="bg-white p-4 rounded shadow text-center w-3/4 ml-100">
         <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
-          Event Description
+         Description
         </div>
         <div className="max-h-60 overflow-y-auto">
-          CUSS presents National Science Fair is a prestigious and innovative scientific event that celebrates and showcases the remarkable achievements and discoveries of budding scientists, researchers, and inventors from all across the nation. This fair provides a platform for young minds to explore the wonders of science, technology, and innovation, fostering a spirit of curiosity and creativity.
-          Participants at the fair have the opportunity to present their scientific projects, experiments, and inventions to a diverse audience, which includes experts, educators, and fellow enthusiasts. The event serves as a melting pot of knowledge, where attendees can learn about a wide range of scientific disciplines, from biology and physics to engineering and environmental science.
+          {eventData?.description || "Description"} 
         </div>
       </div>
     </div>
@@ -111,7 +160,7 @@ const EventDetails = () => {
 
         {activeTab === "organizer" && (
           <div className="mt-6 flex flex-col items-center">
-      
+            {eventData?.orgName || "Organizer"}
           </div>
         )}
         {activeTab === "register" && (
@@ -123,7 +172,7 @@ const EventDetails = () => {
         {activeTab === "payment" && (
           <div className="mt-6 flex justify-center">
             <div className="bg-blue-100 p-8 rounded-lg shadow-lg text-center">
-              <div className="text-xl font-semibold">Total Amount: $100</div>
+              <div className="text-xl font-semibold">Total Amount: {eventData?.price || 100 }</div>
               <p className="text-base text-gray-600 my-2">Payment Options:</p>
               <p className="text-sm text-gray-500">
                 You can pay via any media
@@ -132,10 +181,53 @@ const EventDetails = () => {
                 Bkash or Nagad. Use any method you prefer.
               </p>
               <div className="mt-4">
-                <button className="bg-blue-500 text-white py-2 px-4 rounded">
+                <button className="bg-blue-500 text-white py-2 px-4 rounded" onClick={handlePayNow}>
                   Pay Now
                 </button>
               </div>
+              {/* Pop-up for payment success */}
+      {paymentSuccess && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+          <div className="relative w-auto max-w-sm mx-auto my-6">
+            <div className="bg-white rounded shadow-lg p-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">Payment Successful!</h3>
+                <p>Your order has been placed successfully.</p>
+              </div>
+              <div className="text-center mt-4">
+                <button
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
+                  onClick={() => setPaymentSuccess(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pop-up for payment failure */}
+      {paymentFailure && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+          <div className="relative w-auto max-w-sm mx-auto my-6">
+            <div className="bg-white rounded shadow-lg p-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">Payment Unsuccessful!</h3>
+                <p>There was an issue processing your payment. Please try again later.</p>
+              </div>
+              <div className="text-center mt-4">
+                <button
+                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none"
+                  onClick={() => setPaymentFailure(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
             </div>
           </div>
         )}

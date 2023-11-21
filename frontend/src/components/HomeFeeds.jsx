@@ -1,28 +1,26 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import image5 from "../assets/Dhaka_folk_fest.jpg"; // New image
-import image4 from "../assets/Sailor_run_bangla.jpg"; // New image
-import image1 from "../assets/image_of Hackathon.jpg";
-import image3 from "../assets/image_of_Cassini_hackathon.jpg"; // New image
-import image6 from "../assets/image_of_Chittagong_SC.jpg"; // New image
-import image2 from "../assets/image_of_MIST_olympiad.jpg"; // Fixed image filename
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import DummyImage from "../assets/Dhaka_folk_fest.jpg";
+
+// need to add the event dates to the <p> tags which are empty now 
 
 const EventCard = ({ event }) => (
   <div className="w-full md:w-1/2 lg:w-1/3 p-2 md:p-4">
     <div className="bg-white rounded-lg shadow-md">
       <img
-        src={event.image}
-        alt={event.title}
+        src={event.images && event.images.length > 0 ? event.images[0] : DummyImage}
+        alt={event.name}
         className="w-full h-32 md:h-48 object-cover rounded-t-lg"
       />
       <div className="p-4">
-        <Link to="/eventdetails" className="hover:underline">
-          <h2 className="text-lg md:text-xl font-bold mb-2">{event.title}</h2>
+      <Link to={`/eventdetails/${event._id}`} className="hover:underline">
+          <h2 className="text-lg md:text-xl font-bold mb-2">{event.name}</h2>
         </Link>
-        <p className="text-sm text-gray-500">@{event.event_organizer}</p>
+        <p className="text-sm text-gray-500">@{event.orgName}</p>
         <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
-          <p>{event.updatedAt.toLocaleDateString()}</p>
-          <p>{event.updatedAt.toLocaleTimeString()}</p>
+          <p> </p> 
+          <p> </p>
         </div>
       </div>
     </div>
@@ -31,74 +29,54 @@ const EventCard = ({ event }) => (
 
 EventCard.propTypes = {
   event: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    event_organizer: PropTypes.string.isRequired,
-    updatedAt: PropTypes.instanceOf(Date).isRequired,
-    desc: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired, // New image property
+    _id: PropTypes.string.isRequired, 
+    name: PropTypes.string.isRequired,
+    orgName: PropTypes.string.isRequired,
+    images: PropTypes.array,
   }).isRequired,
 };
 
 const HomeFeeds = () => {
-  const events = [
-    {
-      id: 1,
-      title: "CUSS Science Festival",
-      event_organizer: "CUSS",
-      updatedAt: new Date(),
-      desc:
-        "The National Science Festival is a significant event in various countries, dedicated to the general public to celebrate and explore various aspects of science and technology.",
-      image: image6, // Add image property
-    },
-    {
-      id: 2,
-      title: "MIST Olympiad Bee",
-      event_organizer: "MIST Math Club",
-      updatedAt: new Date(),
-      desc: "Hackathon festival",
-      image: image2, // Add image property
-    },
-    {
-      id: 3,
-      title: "Cassini Hackathon Festival",
-      event_organizer: "Cassini Foundation",
-      updatedAt: new Date(),
-      desc: "Explore the latest in technology and innovation at Tech Expo 2023.",
-      image: image3, // Add image property
-    },
-    {
-      id: 4,
-      title: "Sailor Run for Bangladesh",
-      event_organizer: "Sailor",
-      updatedAt: new Date(),
-      desc: "Celebrate art, culture, and creativity at this cultural fair.",
-      image: image4, // Add image property
-    },
-    {
-      id: 5,
-      title: "Dhaka Lit Festival",
-      event_organizer: "Lit Carnival",
-      updatedAt: new Date(),
-      desc: "Learn about sustainable and green energy solutions at this symposium.",
-      image: image5, // Add image property
-    },
-    {
-      id: 6,
-      title: "SIH Intra Hackathon Festival",
-      event_organizer: "SIH Computer Club",
-      updatedAt: new Date(),
-      desc:
-        "The National Science Festival is a significant event in various countries, dedicated to the general public to celebrate and explore various aspects of science and technology.",
-      image: image1, // Add image property
-    },
-  ];
+  const { key } = useParams();
+  const [events, setEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const eventsPerPage = 20;
+
+  useEffect(() => {
+    const url = key
+      ? `http://localhost:5000/eventAPI/Customer/searchEvents/${key}`
+      : `http://localhost:5000/eventAPI/Customer/events`;
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+            console.log(data);  
+            setEvents(data);
+        })
+      .catch((error) => console.error("Error fetching events:", error));
+  }, [currentPage, key]);
+  
+  const totalPages = Math.ceil(events.length / eventsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="w-full mt-8">
       <div className="flex flex-wrap -mx-2 md:-mx-4">
         {events.map((event) => (
-          <EventCard key={event.id} event={event} />
+          <EventCard key={event._id} event={event} />
+        ))}
+      </div>
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`mx-2 px-3 py-1 border ${currentPage === index + 1 ? 'bg-gray-300' : ''}`}
+          >
+            {index + 1}
+          </button>
         ))}
       </div>
     </div>
