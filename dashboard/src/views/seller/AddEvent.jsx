@@ -29,6 +29,7 @@ const AddProduct = () => {
     discount: "",
     price: "",
     stock: "",
+    eventDate: "",
   });
   const inputHandle = (e) => {
     setState({
@@ -95,14 +96,22 @@ const AddProduct = () => {
 
   const add = (e) => {
     e.preventDefault();
+
+    // Check if at least two images are selected
+    if (images.length < 2) {
+      toast.error("Please select at least two images.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", state.name);
     formData.append("description", state.description);
     formData.append("price", state.price);
     formData.append("stock", state.stock);
-    // formData.append("category", category);
+    formData.append("category", category);
     formData.append("discount", state.discount);
-    formData.append("orgName", "orgName");
+    formData.append("eventDate", state.eventDate);
+    // formData.append("orgName", "orgName");
     // formData.append("brand", state.brand);
     for (let i = 0; i < images.length; i++) {
       formData.append("images", images[i]);
@@ -169,9 +178,25 @@ const AddProduct = () => {
                   id="brand"
                 />
               </div> */}
+
+              <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
+                <div className="flex flex-col w-full gap-1">
+                  <label htmlFor="eventDate">Event Date</label>
+                  <input
+                    className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#283046] border border-slate-700 rounded-md text-[#d0d2d6]"
+                    onChange={inputHandle}
+                    value={state.eventDate}
+                    type="date"
+                    placeholder="Event Date"
+                    name="eventDate"
+                    id="eventDate"
+                    min={new Date().toISOString().split("T")[0]}
+                  />
+                </div>
+              </div>
             </div>
             <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
-              {/* <div className="flex flex-col w-full gap-1 relative">
+              <div className="flex flex-col w-full gap-1 relative">
                 <label htmlFor="category">Category</label>
                 <input
                   readOnly
@@ -216,7 +241,8 @@ const AddProduct = () => {
                     ))}
                   </div>
                 </div>
-              </div> */}
+              </div>
+
               <div className="flex flex-col w-full gap-1">
                 <label htmlFor="stock">Seats Available</label>
                 <input

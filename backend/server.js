@@ -138,11 +138,12 @@ io.on("connection", (soc) => {
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"))
-app.use("/userAPI/", require("./routes/CutomerRoutes/users"))
-app.use("/eventAPI/", require("./routes/CutomerRoutes/events"))
+app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"));
+app.use("/userAPI/", require("./routes/CutomerRoutes/users"));
+app.use("/eventAPI/", require("./routes/CutomerRoutes/events"));
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/dashboard/sellerRoutes"));
+app.use("/api", require("./routes/order/orderRoutes"));
 app.use("/api/admins", adminRoutes);
 //app.use("/api/auth", require("./routes/auth"));
 app.use("/api/data", dataRoutes);

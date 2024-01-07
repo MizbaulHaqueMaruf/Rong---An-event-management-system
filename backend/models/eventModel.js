@@ -46,6 +46,9 @@ const eventSchema = new Schema(
       type: Number,
       default: 0,
     },
+    eventDate: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
