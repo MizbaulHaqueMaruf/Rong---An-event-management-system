@@ -16,9 +16,9 @@ const OrganizationList = () => {
       {organizations.map((org) => (
         <CardOrg
           title={org.name}
-          description={org.description}
+          //description={org.description}
           email={org.email}
-          website={org.website}
+          //website={org.website}
         />
       ))}
     </div>
