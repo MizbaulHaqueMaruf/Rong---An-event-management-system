@@ -30,7 +30,8 @@ export const sellerRoutes = [
 
   {
     path: "/seller/dashboard",
-    element: <SellerDashboard />,
+    // element: <SellerDashboard />,
+    element: <Products />,
     role: "seller",
     status: "active",
   },

@@ -65,27 +65,28 @@ export const allNav = [
   //     role: 'admin',
   //     path: '/admin/dashboard/chat-sellers'
   // },
-  {
-    id: 9,
-    title: "Dashboard",
-    icon: <AiFillDashboard />,
-    role: "seller",
-    path: "/seller/dashboard",
-  },
+  // {
+  //   id: 9,
+  //   title: "Dashboard",
+  //   icon: <AiFillDashboard />,
+  //   role: "seller",
+  //   path: "/seller/dashboard",
+  // },
   {
     id: 10,
-    title: "Add Event",
-    icon: <AiOutlinePlus />,
-    role: "seller",
-    path: "/seller/dashboard/add-product",
-  },
-  {
-    id: 11,
     title: "All Events",
     icon: <RiProductHuntLine />,
     role: "seller",
     path: "/seller/dashboard/products",
   },
+  {
+    id: 11,
+    title: "Add Event",
+    icon: <AiOutlinePlus />,
+    role: "seller",
+    path: "/seller/dashboard/add-product",
+  },
+
   // {
   //   id: 12,
   //   title: "Discount Product",
