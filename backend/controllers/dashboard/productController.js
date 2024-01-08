@@ -9,8 +9,17 @@ class productController {
     const form = formidable({ multiples: true });
 
     form.parse(req, async (err, field, files) => {
-      let { name, category, description, stock, price, discount, eventDate } =
-        field;
+      let {
+        name,
+        category,
+        description,
+        stock,
+        price,
+        discount,
+        eventDate,
+        latitude,
+        longitude,
+      } = field;
       const { images } = files;
       name = name.trim();
       const slug = name.split(" ").join("-");
@@ -50,6 +59,8 @@ class productController {
           discount: parseInt(discount),
           images: allImageUrl,
           eventDate: eventDate,
+          latitude,
+          longitude,
         });
         responseReturn(res, 201, { message: "Event added successfully" });
       } catch (error) {

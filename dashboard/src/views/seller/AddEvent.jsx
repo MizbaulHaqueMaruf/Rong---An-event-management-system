@@ -30,6 +30,8 @@ const AddProduct = () => {
     price: "",
     stock: "",
     eventDate: "",
+    latitude: 0,
+    longitude: 0,
   });
   const inputHandle = (e) => {
     setState({
@@ -111,6 +113,8 @@ const AddProduct = () => {
     formData.append("category", category);
     formData.append("discount", state.discount);
     formData.append("eventDate", state.eventDate);
+    formData.append("latitude", state.latitude);
+    formData.append("longitude", state.longitude);
     // formData.append("orgName", "orgName");
     // formData.append("brand", state.brand);
     for (let i = 0; i < images.length; i++) {
@@ -296,6 +300,33 @@ const AddProduct = () => {
                 name="description"
                 id="description"
               ></textarea>
+            </div>
+            <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
+              <div className="flex flex-col w-full gap-1">
+                <label htmlFor="latitude">Latitude</label>
+                <input
+                  className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#283046] border border-slate-700 rounded-md text-[#d0d2d6]"
+                  onChange={inputHandle}
+                  value={state.latitude}
+                  type="number"
+                  placeholder="Latitude"
+                  name="latitude"
+                  id="latitude"
+                />
+              </div>
+
+              <div className="flex flex-col w-full gap-1">
+                <label htmlFor="longitude">Longitude</label>
+                <input
+                  className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#283046] border border-slate-700 rounded-md text-[#d0d2d6]"
+                  onChange={inputHandle}
+                  value={state.longitude}
+                  type="number"
+                  placeholder="Longitude"
+                  name="longitude"
+                  id="longitude"
+                />
+              </div>
             </div>
             <div className="grid lg:grid-cols-4 grid-cols-1 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 md:gap-4 xs:gap-4 gap-3 w-full text-[#d0d2d6] mb-4">
               {imageShow.map((img, i) => (
