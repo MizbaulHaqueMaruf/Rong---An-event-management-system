@@ -1,6 +1,7 @@
 const formidable = require("formidable");
 const cloudinary = require("cloudinary").v2;
 const productModel = require("../../models/eventModel");
+const sellerModel = require("../../models/sellerModel");
 const { responseReturn } = require("../../utiles/response");
 class productController {
   add_product = async (req, res) => {
@@ -8,7 +9,17 @@ class productController {
     const form = formidable({ multiples: true });
 
     form.parse(req, async (err, field, files) => {
-      let { name, description, stock, price, discount, orgName } = field;
+      let {
+        name,
+        category,
+        description,
+        stock,
+        price,
+        discount,
+        eventDate,
+        latitude,
+        longitude,
+      } = field;
       const { images } = files;
       name = name.trim();
       const slug = name.split(" ").join("-");
@@ -30,19 +41,28 @@ class productController {
           allImageUrl = [...allImageUrl, result.url];
         }
 
+        const seller = await sellerModel.findOne({ _id: id });
+        const orgName = seller
+          ? seller.organization.orgName
+          : "Default Org Name";
+        // console.log(orgName);
+
         await productModel.create({
           sellerId: id,
           name,
           slug,
-          orgName,
-          category: "category",
+          orgName: orgName,
+          category,
           description: description.trim(),
           stock: parseInt(stock),
           price: parseInt(price),
           discount: parseInt(discount),
           images: allImageUrl,
+          eventDate: eventDate,
+          latitude,
+          longitude,
         });
-        responseReturn(res, 201, { message: "product add success" });
+        responseReturn(res, 201, { message: "Event added successfully" });
       } catch (error) {
         responseReturn(res, 500, { error: error.message });
       }
@@ -97,8 +117,16 @@ class productController {
     }
   };
   product_update = async (req, res) => {
-    let { name, description, discount, price, brand, productId, stock } =
-      req.body;
+    let {
+      name,
+      description,
+      discount,
+      price,
+      brand,
+      productId,
+      stock,
+      eventDate,
+    } = req.body;
     name = name.trim();
     const slug = name.split(" ").join("-");
     try {
@@ -111,9 +139,13 @@ class productController {
         productId,
         stock,
         slug,
+        eventDate,
       });
       const product = await productModel.findById(productId);
-      responseReturn(res, 200, { product, message: "product update success" });
+      responseReturn(res, 200, {
+        product,
+        message: "Event updated successfully",
+      });
     } catch (error) {
       responseReturn(res, 500, { error: error.message });
     }
@@ -151,7 +183,7 @@ class productController {
             const product = await productModel.findById(productId);
             responseReturn(res, 200, {
               product,
-              message: "product image update success",
+              message: "Event image updated successfully",
             });
           } else {
             responseReturn(res, 404, { error: "image upload failed" });

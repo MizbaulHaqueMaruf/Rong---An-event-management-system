@@ -1,6 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
+  sellerId: {
+    type: mongoose.Schema.ObjectId,
+    required: true,
+  },
   eventId: {
     type: mongoose.Schema.ObjectId,
     required: true,
@@ -9,11 +13,10 @@ const orderSchema = new mongoose.Schema({
   eventOrganizer: { type: String },
   ticketId: { type: String },
   eventDate: { type: Date },
-  UserId:{
+  UserId: {
     type: mongoose.Schema.ObjectId,
     required: true,
-  }
+  },
 });
 
-
-module.exports=mongoose.model("Order",orderSchema)
+module.exports = mongoose.model("Order", orderSchema);

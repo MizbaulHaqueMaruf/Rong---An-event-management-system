@@ -40,14 +40,14 @@ const Orders = () => {
                   Registration Id
                 </th>
                 <th scope="col" className="py-3 px-4">
-                  Price
+                  Event Name
                 </th>
                 <th scope="col" className="py-3 px-4">
-                  Payment Status
+                  User Id
                 </th>
-                <th scope="col" className="py-3 px-4">
+                {/* <th scope="col" className="py-3 px-4">
                   Registration Status
-                </th>
+                </th> */}
                 <th scope="col" className="py-3 px-4">
                   Date
                 </th>
@@ -63,31 +63,31 @@ const Orders = () => {
                     scope="row"
                     className="py-3 px-4 font-medium whitespace-nowrap"
                   >
-                    #{d._id}
+                    {d._id}
                   </td>
                   <td
                     scope="row"
                     className="py-3 px-4 font-medium whitespace-nowrap"
                   >
-                    ${d.price}
+                    {d.eventTitle}
                   </td>
                   <td
                     scope="row"
                     className="py-3 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>{d.payment_status}</span>
+                    <span>{d.UserId}</span>
                   </td>
-                  <td
+                  {/* <td
                     scope="row"
                     className="py-3 px-4 font-medium whitespace-nowrap"
                   >
                     <span>{d.delivery_status}</span>
-                  </td>
+                  </td> */}
                   <td
                     scope="row"
                     className="py-3 px-4 font-medium whitespace-nowrap"
                   >
-                    ${d.date}
+                    {d.eventDate.split("T")[0]}
                   </td>
                   <td
                     scope="row"
