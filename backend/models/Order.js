@@ -15,8 +15,12 @@ const orderSchema = new mongoose.Schema({
   eventDate: { type: Date },
   UserId: {
     type: mongoose.Schema.ObjectId,
-    required: true,
+    required: true
   },
+  IsPaid:{
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model("Order", orderSchema);

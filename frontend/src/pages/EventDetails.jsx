@@ -3,10 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
 import image1 from "../assets/Dhaka_folk_fest.jpg";
+import EventOrganizer from "../components/EventOrganizer";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { UserContext } from "../context/UserContext";
-// event details with id needs to be done here 
 
 const EventDetails = () => {
   const {isLoggedIn, userId } = useContext(UserContext);
@@ -16,15 +16,19 @@ const EventDetails = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentFailure, setPaymentFailure] = useState(false);
   const navigate = useNavigate();
-
-  const handlePayNow = async () => {
+  let latitude = 0;
+  let longitude = 0;
+  const handlePayNow = async ()=>{
+    
+  }
+  const handlePlaceOrder = async () => {
     try {
       if(!isLoggedIn) {
             navigate('/login');
             return;
       }
       // Make a POST request to the backend to create an order
-      const response = await fetch('http://localhost:5000/eventAPI/Customer/orderEvent', {
+      const response = await fetch('http://localhost:5000/eventAPI/Customer/evets/orderEvent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,6 +59,10 @@ const EventDetails = () => {
       .then((data) => {
         console.log("Received data:", data);
         setEventData(data);
+        if (eventData.latitude && eventData.longitude) {
+          latitude = eventData?.latitude;
+          longitude = eventData?.longitude;
+        }
       })
       .catch((error) => console.error("Error fetching event details:", error));
   }, [id]);  
@@ -93,23 +101,13 @@ const EventDetails = () => {
           </button>
           <button
             className={`${
-              activeTab === "register"
+              activeTab === "Place Order"
                 ? "bg-transparent text-blue-500 hover:bg-blue-100"
                 : "bg-transparent text-gray-500 hover:bg-gray-100"
             } py-2 px-4 rounded`}
-            onClick={() => setActiveTab("register")}
+            onClick={() => setActiveTab("Place Order")}
           >
-            Register
-          </button>
-          <button
-            className={`${
-              activeTab === "payment"
-                ? "bg-transparent text-blue-500 hover:bg-blue-100"
-                : "bg-transparent text-gray-500 hover:bg-gray-100"
-            } py-2 px-4 rounded`}
-            onClick={() => setActiveTab("payment")}
-          >
-            Payment
+            Place Order
           </button>
         </div>
        {activeTab === "home" && (
@@ -130,14 +128,14 @@ const EventDetails = () => {
         <div>
           {/* Add the map here */}
           <MapContainer
-            center={[51.505, -0.09]}
+            center={[latitude, longitude]}
             zoom={13}
             style={{ height: "200px", width: "100%" }}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={[51.505, -0.09]}>
+            <Marker position={[latitude, longitude]}>
               <Popup>Location</Popup>
             </Marker>
           </MapContainer>
@@ -160,16 +158,10 @@ const EventDetails = () => {
 
         {activeTab === "organizer" && (
           <div className="mt-6 flex flex-col items-center">
-            {eventData?.orgName || "Organizer"}
+            <EventOrganizer event={id}/>
           </div>
         )}
-        {activeTab === "register" && (
-          <div className="mt-6">
-            {/* Register form */}
-            {/* Implement your registration form here */}
-          </div>
-        )}
-        {activeTab === "payment" && (
+        {activeTab === "Place Order" && (
           <div className="mt-6 flex justify-center">
             <div className="bg-blue-100 p-8 rounded-lg shadow-lg text-center">
               <div className="text-xl font-semibold">Total Amount: {eventData?.price || 100 }</div>
@@ -181,8 +173,8 @@ const EventDetails = () => {
                 Bkash or Nagad. Use any method you prefer.
               </p>
               <div className="mt-4">
-                <button className="bg-blue-500 text-white py-2 px-4 rounded" onClick={handlePayNow}>
-                  Pay Now
+                <button className="bg-blue-500 text-white py-2 px-4 rounded" onClick={handlePlaceOrder}>
+                  Place Order
                 </button>
               </div>
               {/* Pop-up for payment success */}
@@ -191,10 +183,16 @@ const EventDetails = () => {
           <div className="relative w-auto max-w-sm mx-auto my-6">
             <div className="bg-white rounded shadow-lg p-6">
               <div className="text-center">
-                <h3 className="text-lg font-semibold mb-2">Payment Successful!</h3>
+                <h3 className="text-lg font-semibold mb-2">Order Placed Successful!</h3>
                 <p>Your order has been placed successfully.</p>
               </div>
               <div className="text-center mt-4">
+                <button
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
+                  onClick={handlePayNow}
+                >
+                 Pay
+                </button>
                 <button
                   className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
                   onClick={() => setPaymentSuccess(false)}

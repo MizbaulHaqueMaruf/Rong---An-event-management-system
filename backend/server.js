@@ -10,7 +10,6 @@ const socket = require("socket.io");
 const adminRoutes = require("./routes/admin.js");
 const dataRoutes = require("./routes/data.js");
 const routesAuth = require("./routes/auth");
-
 const server = http.createServer(app);
 
 app.use(

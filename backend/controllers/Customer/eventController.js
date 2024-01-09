@@ -72,5 +72,43 @@ const createOrder = async (req, res) =>{
 function generateRandomId() {
   return Math.random().toString(36).substr(2, 9); // Random alphanumeric ID
 }
+const getSellerbyEventId = async (req, res) => {
+  const eventId = req.params.id;
+  console.log("Event ID:", eventId); // Add this line to log the received event ID
 
-module.exports = {getEvents, searchEvents, getEventbyID, createOrder};
+  try {
+    const event = await events.findById(eventId);
+    console.log("Event:", event); // Add this line to log the retrieved event
+
+    if (!event) res.json({ message: 'No such event exists' });
+
+    const sellerId = event.sellerId;
+    console.log("Seller ID:", sellerId); // Add this line to log the extracted seller ID
+
+    const seller = await sellers.findById(sellerId);
+    console.log("Seller:", seller); // Add this line to log the retrieved seller
+
+    if (!seller) {
+      res.status(404).json({ message: "Seller is not found" });
+    }
+
+    res.json(seller);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+const deleteOrder = async (req, res) => {
+    const orderId = req.body.orderId;
+    try{
+      const order = Order.findById(orderId);
+      if(!order){
+        res.status(404).send({message: "Order not found!"});
+      }
+      order.delete();
+    }catch(err){
+      res.status(500).send({message: err.message});
+    }
+}
+module.exports = {getEvents, searchEvents, getEventbyID, createOrder , getSellerbyEventId, deleteOrder};
