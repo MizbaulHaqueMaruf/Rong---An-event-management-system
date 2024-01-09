@@ -21,7 +21,7 @@ const sellerSchema = new Schema(
     },
     status: {
       type: String,
-      default: "active",
+      default: "inactive",
     },
     payment: {
       type: String,
