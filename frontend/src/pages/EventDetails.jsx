@@ -1,4 +1,6 @@
-import "leaflet/dist/leaflet.css"; // Import the Leaflet CSS
+/* eslint-disable react-hooks/exhaustive-deps */
+import { loadStripe } from '@stripe/stripe-js';
+import "leaflet/dist/leaflet.css";
 import { useContext, useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,34 +12,125 @@ import { UserContext } from "../context/UserContext";
 
 const EventDetails = () => {
   const {isLoggedIn, userId } = useContext(UserContext);
+  const [reviews, setReviews] = useState([]);
+  const [userRating, setUserRating] = useState(0);
+  const [userComment, setUserComment] = useState('');
   const [activeTab, setActiveTab] = useState("home");
   const [eventData, setEventData] = useState(null);
   const { id } = useParams();
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentFailure, setPaymentFailure] = useState(false);
+  const [numTickets, setNumTickets] = useState(0);
   const navigate = useNavigate();
-  let latitude = 0;
-  let longitude = 0;
-  const handlePayNow = async ()=>{
-    
+  const latitude = eventData?.latitude || 0;
+  const longitude = eventData?.longitude || 0;
+  const handleStarClick = (rating) => {
+    // Set the user's selected rating
+    setUserRating(rating);
   }
-  const handlePlaceOrder = async () => {
+  const submitReview = async () => {
+    try {
+      // Make a POST request to submit the review to the backend
+      const response = await fetch('http://localhost:5000/eventAPI/Customer/events/submitReview', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventId: eventData._id,
+          rating: userRating,
+          comment: userComment,
+        }),
+      });
+
+      if (response.ok) {
+        // Successfully submitted review
+        console.log('Review submitted successfully');
+        // Optionally, you can fetch updated reviews after submission
+        fetchReviews();
+      } else {
+        // Failed to submit review
+        console.error('Failed to submit review');
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
+  };
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/eventAPI/Customer/events/reviews/${id}`);
+      if (response.ok) {
+        const reviewsData = await response.json();
+        setReviews(reviewsData);
+      } else {
+        console.error('Failed to fetch reviews');
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+  
+  const handlePayNow = async ()=>{
+    const stripe  = await loadStripe("pk_test_51OWhCHHyOH1NkwnJ12v0lb1QHyopFCGdPU718AURyJ1puglQG8QeKfdJ8oVU67QVeNpNUhksv9a3TklM1TwQHRlG00xO0JxwVv")
+    const platformBill = Math.ceil(totalPrice *0.05);
+    const body ={
+        eventTitle: eventData?.name,
+        customerId:userId,
+        eventId:eventData?._id,
+        sellerId:eventData?.sellerId,
+        numberOfTickets: numTickets,
+        unitPrice: eventData?.price,
+        totalAmount: totalPrice+ platformBill,
+        platformCharge: platformBill,
+    }
+    console.log(body);
+    const headers={
+      "Content-Type": "application/json"
+    }
+    const response = await fetch("http://localhost:5000/eventAPI/Customer/events/create-checkout-session",{
+       method: "POST",
+       headers: headers,
+       body: JSON.stringify(body)
+    })
+    const session = await response.json();
+    console.log(session);
+    const result = stripe.redirectToCheckout({
+        sessionId: session.id,
+
+    });
+    if(result.error){
+      console.log(result.error);
+    }
+  }
+  const handleNumTicketsChange = (e) => {
+    const tickets = parseInt(e.target.value, 10);
+    setNumTickets(tickets);
+  };
+
+  const totalPrice = numTickets * (eventData?.price || 100);
+  const isDisabled = numTickets === 0;
+  const handlePlaceOrder = async (e) => {
+    e.preventDefault();
     try {
       if(!isLoggedIn) {
             navigate('/login');
             return;
       }
       // Make a POST request to the backend to create an order
-      const response = await fetch('http://localhost:5000/eventAPI/Customer/evets/orderEvent', {
+      const response = await fetch('http://localhost:5000/eventAPI/Customer/events/orderEvent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        },
+          },
         body: JSON.stringify({
           eventTitle: eventData.name,
+          sellerId:eventData.sellerId,
           eventOrganizer: eventData.orgName,
           eventId : eventData._id,
           UserId: userId,
+          totalAmount: totalPrice,
+          numberOfTickets: numTickets,
+          isPaid: false
         }),
       });
 
@@ -59,12 +152,12 @@ const EventDetails = () => {
       .then((data) => {
         console.log("Received data:", data);
         setEventData(data);
-        if (eventData.latitude && eventData.longitude) {
-          latitude = eventData?.latitude;
-          longitude = eventData?.longitude;
-        }
       })
       .catch((error) => console.error("Error fetching event details:", error));
+      if (activeTab === 'reviews') {
+        console.log("this is reviews tab");
+        fetchReviews();
+      }
   }, [id]);  
   return (
     <div>
@@ -108,6 +201,16 @@ const EventDetails = () => {
             onClick={() => setActiveTab("Place Order")}
           >
             Place Order
+          </button>
+          <button
+            className={`${
+              activeTab === "reviews"
+                ? "bg-transparent text-blue-500 hover:bg-blue-100"
+                : "bg-transparent text-gray-500 hover:bg-gray-100"
+            } py-2 px-4 rounded`}
+            onClick={() => setActiveTab("reviews")}
+          >
+            Reviews
           </button>
         </div>
        {activeTab === "home" && (
@@ -164,18 +267,37 @@ const EventDetails = () => {
         {activeTab === "Place Order" && (
           <div className="mt-6 flex justify-center">
             <div className="bg-blue-100 p-8 rounded-lg shadow-lg text-center">
-              <div className="text-xl font-semibold">Total Amount: {eventData?.price || 100 }</div>
-              <p className="text-base text-gray-600 my-2">Payment Options:</p>
-              <p className="text-sm text-gray-500">
-                You can pay via any media
-              </p>
-              <p className="text-sm text-gray-500">
-                Bkash or Nagad. Use any method you prefer.
-              </p>
+              <div className="text-xl font-semibold">Price for Each Seat: {eventData?.price || 100 }</div>
               <div className="mt-4">
-                <button className="bg-blue-500 text-white py-2 px-4 rounded" onClick={handlePlaceOrder}>
-                  Place Order
-                </button>
+              <form className="my-4">
+          <label htmlFor="numTickets" className="text-base text-gray-600">
+            Number of Tickets:
+          </label>
+          <input
+            type="number"
+            id="numTickets"
+            name="numTickets"
+            min="0"
+            value={numTickets}
+            onChange={handleNumTicketsChange}
+            className="border rounded-md p-2 mx-2"
+          />
+          <div className="text-base text-gray-600 my-2">Total Amount: {totalPrice}</div>
+          <button
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+            onClick={handlePlaceOrder}
+            disabled={isDisabled}
+          >
+            Place Order
+          </button>
+        </form>
+        <p className="text-base text-gray-600 my-2">Payment Options:</p>
+        <p className="text-sm text-gray-500">
+          You can pay via any media
+        </p>
+        <p className="text-sm text-gray-500">
+          Bkash or Nagad. Use any method you prefer.
+        </p>
               </div>
               {/* Pop-up for payment success */}
       {paymentSuccess && (
@@ -184,14 +306,14 @@ const EventDetails = () => {
             <div className="bg-white rounded shadow-lg p-6">
               <div className="text-center">
                 <h3 className="text-lg font-semibold mb-2">Order Placed Successful!</h3>
-                <p>Your order has been placed successfully.</p>
+                <p>Your order has been placed successfully. You need to pay {totalPrice} Taka </p>
               </div>
               <div className="text-center mt-4">
                 <button
                   className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
                   onClick={handlePayNow}
                 >
-                 Pay
+                 Go to Payment 
                 </button>
                 <button
                   className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
@@ -211,8 +333,8 @@ const EventDetails = () => {
           <div className="relative w-auto max-w-sm mx-auto my-6">
             <div className="bg-white rounded shadow-lg p-6">
               <div className="text-center">
-                <h3 className="text-lg font-semibold mb-2">Payment Unsuccessful!</h3>
-                <p>There was an issue processing your payment. Please try again later.</p>
+                <h3 className="text-lg font-semibold mb-2">Order Unsuccessful!</h3>
+                <p>There was an issue processing your order. Please try again later.</p>
               </div>
               <div className="text-center mt-4">
                 <button
@@ -226,6 +348,66 @@ const EventDetails = () => {
           </div>
         </div>
       )}
+      {activeTab === 'reviews' && (
+  <div className="mt-6 flex flex-col items-center">
+    {/* Section for displaying other users' reviews */}
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-4">Top Reviews</h2>
+      {reviews.map((review) => (
+        <div key={review.id} className="mb-4">
+          <p>{review.comment}</p>
+          <p>Rating: {review.rating} stars</p>
+          {/* Add additional information if needed */}
+        </div>
+      ))}
+    </div>
+
+    {/* Section for leaving a review */}
+    <div className="w-1/2">
+      <h2 className="text-2xl font-bold mb-4">Leave Your Review</h2>
+
+      {/* Star rating section */}
+      <div className="flex items-center mb-4">
+        <p className="mr-2">Your Rating:</p>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            onClick={() => handleStarClick(star)}
+            className={`text-2xl ${
+              userRating >= star ? 'text-yellow-500' : 'text-gray-400'
+            }`}
+          >
+            &#9733;
+          </button>
+        ))}
+      </div>
+
+      {/* Comment box */}
+      <div>
+        <label htmlFor="comment" className="block text-gray-600 mb-2">
+          Your Comment:
+        </label>
+        <textarea
+          id="comment"
+          name="comment"
+          rows="4"
+          className="w-full border p-2 rounded"
+          value={userComment}
+          onChange={(e) => setUserComment(e.target.value)}
+        ></textarea>
+      </div>
+
+      {/* Submit button */}
+      <button
+        className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
+        onClick={submitReview}
+      >
+        Submit Review
+      </button>
+    </div>
+  </div>
+)}
+            
             </div>
           </div>
         )}

@@ -23,7 +23,7 @@ const Profile = () => {
 
 const fetchProfile=async ()=>{
   try{
-     const res=await axios.get(URL+"/api/users/"+user._id)
+     const res=await axios.get(URL+"/userAPI/Customer/"+user._id)
      setfirstName(res.data.firstName)
      setlastName(res.data.lastName)
      setEmail(res.data.email)
@@ -62,7 +62,7 @@ const handleUserDelete=async()=>{
   }
 }
 // console.log(user)
-const fetchUserPosts=async ()=>{
+const fetchUserOrders=async ()=>{
   try{
     //const res=await axios.get(URL+"/api/posts/user/"+user._id)
     // console.log(res.data)
@@ -81,7 +81,7 @@ useEffect(()=>{
 },[param])
 
 useEffect(()=>{
-  fetchUserPosts()
+  fetchUserOrders()
 
 },[param])
 
@@ -90,7 +90,7 @@ useEffect(()=>{
       <Navbar/>
       <div className="min-h-[80vh] px-8 md:px-[200px] mt-8 flex md:flex-row flex-col-reverse md:items-start items-start">
         <div className="flex flex-col md:w-[70%] w-full mt-8 md:mt-0">
-          <h1 className="text-xl font-bold mb-4">Your Events:</h1>
+          <h1 className="text-xl font-bold mb-4">Your Orders:</h1>
             <ProfileOrders/>
         </div>
         <div className="md:sticky md:top-12  flex justify-start md:justify-end items-start md:w-[30%] w-full md:items-end ">
