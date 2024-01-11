@@ -68,7 +68,26 @@ import "./CardOrg.css";
 //   );
 // };
 
-const CardOrg = ({ title, email, link }) => {
+const CardOrg = ({ title, email, link, id }) => {
+  const [approveClicked, setApproveClicked] = useState(false);
+  const [rejectClicked, setRejectClicked] = useState(false);
+
+  const sendMail = async () => {
+    await fetch(`http://localhost:5000/api/data/send-mail/${id}`, { method: 'POST' });
+  };
+
+  const approveSeller = async () => {
+   // event.preventDefault();
+   setApproveClicked(prevState => !prevState);
+    await fetch(`http://localhost:5000/api/data/seller-approve/${id}`, { method: 'POST' });
+  };
+
+  const rejectSeller = async () => {
+    setRejectClicked(prevState => !prevState);
+    //event.preventDefault();
+    setRejectClicked(true);
+    await fetch(`http://localhost:5000/api/data/seller-reject/${id}`, { method: 'POST' });
+  };
   return (
     <div className="card-containerr">
       {title && <h1 className="card-titler">{title}</h1>}
@@ -77,10 +96,13 @@ const CardOrg = ({ title, email, link }) => {
           <strong>Email:</strong> {email}
         </p>
       )}
-      <a href={link} className="card-btnr">
+       <a href={link} onClick={sendMail} className="card-btnr">
+        Send Email
+      </a>
+      <a href={link} onClick={approveSeller} className="card-btnr" style={{ color: approveClicked ? 'green' : 'white' }}>
         Approve
       </a>
-      <a href={link} className="card-btnr">
+      <a href={link} onClick={rejectSeller} className="card-btnr" style={{ color: rejectClicked ? 'red' : 'white' }}>
         Reject
       </a>
     </div>

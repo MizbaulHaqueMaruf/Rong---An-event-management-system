@@ -7,12 +7,15 @@ const router = express.Router();
 
 router.post("/signup", async (req, res) => {
   try {
-    const { error } = (req.body);
-    if (error) return res.status(400).send({ message: error.details[0].message });
+    const { error } = req.body;
+    if (error)
+      return res.status(400).send({ message: error.details[0].message });
 
     const admin = await Admin.findOne({ email: req.body.email });
     if (admin)
-      return res.status(409).send({ message: "Admin with given email already Exist!" });
+      return res
+        .status(409)
+        .send({ message: "Admin with given email already Exist!" });
 
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
     const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -45,16 +48,17 @@ router.post("/login", async (req, res) => {
     res.status(200).send({ data: token, message: "logged in successfully" });
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error" });
+    console.log(error);
   }
 });
 
 const validateAdmin = (data) => {
   const schema = Joi.object({
-    name:Joi.string().required().label("Name"),
+    name: Joi.string().required().label("Name"),
     number: Joi.string().required().label("Number"),
     email: Joi.string().email().required().label("Email"),
     role: Joi.string().required().label("Role"),
-    password:passwordComplexity().required().label("Password")
+    password: passwordComplexity().required().label("Password"),
   });
   return schema.validate(data);
 };
