@@ -20,7 +20,8 @@ form {
 h1 {
     font-size: 2em;
     margin-bottom: 20px;
-    color: #333;
+    /* color: #333; */
+    color: #ffffff;
 }
 
 label {
@@ -75,7 +76,7 @@ li.category-card {
     margin-bottom: 20px;
     margin-top: 20px;
     text-align: center;
-    background-color: #e7e4e4;
+    background-color: #7388b5;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

@@ -5,9 +5,12 @@ const OrganizationList = () => {
   const [organizations, setOrganizations] = useState([]);
 
   useEffect(() => {
-    fetch(  "http://localhost:5000/api/data/insert-data")
+    fetch("http://localhost:5000/api/data/insert-data")
       .then((response) => response.json())
-      .then((data) => setOrganizations(data))
+      .then((data) => {
+        const filteredOrganizations = data.filter((org) => org.status === "inactive");
+        setOrganizations(filteredOrganizations);
+      })
       .catch((error) => console.error("Error fetching organizations:", error));
   }, []);
 
@@ -15,11 +18,10 @@ const OrganizationList = () => {
     <div className="organization-list-container">
       {organizations.map((org) => (
         <CardOrg
+          key={org._id}
           title={org.name}
           id={org._id}
-          //description={org.description}
           email={org.email}
-          //website={org.website}
         />
       ))}
     </div>
@@ -27,6 +29,7 @@ const OrganizationList = () => {
 };
 
 export default OrganizationList;
+
 
 /*import React, { useEffect, useState } from "react";
 

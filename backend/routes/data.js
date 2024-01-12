@@ -95,8 +95,7 @@ router.post('/send-mail/:id', async(req, res) => {
   try {
       const seller = await Seller.findById(req.params.id);
          const email = seller.email;
-
-        console.log("here")
+          const mailBody= req.body.mailBody;
         console.log(email)
 
       if(seller){
@@ -105,7 +104,7 @@ router.post('/send-mail/:id', async(req, res) => {
               to:email,
               subject:"Seller Approval",
               html:`<h2>Please provide the necessary information</h2>
-              <h1>Approved</h1>`
+              <h1>${mailBody}</h1>`
           }
 
           transporter.sendMail(mailOptions,(error,info)=>{

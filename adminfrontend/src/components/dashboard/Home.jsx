@@ -1,12 +1,27 @@
-import React from 'react'
+//import React from 'react'
 import 
 { BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, BsFillBellFill}
  from 'react-icons/bs'
  import 
  { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } 
  from 'recharts';
+  import { useEffect, useState } from 'react';
 
 function Home() {
+  const [approvedSellersCount, setApprovedSellersCount] = useState(0);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch the data for approved sellers and update the count
+    fetch('http://localhost:5000/api/data/insert-data')
+      .then((response) => response.json())
+      .then((data) => {
+        setCount(data.length);
+        const filteredSellers = data.filter((seller) => seller.status === 'active');
+        setApprovedSellersCount(filteredSellers.length);
+      })
+      .catch((error) => console.error('Error fetching approved sellers:', error));
+  }, []); // Empty dependency array to run the effect only once on mount
 
   const profitData = [
     {
@@ -58,7 +73,7 @@ function Home() {
                     <h3>ORGANIZERS</h3>
                     <BsFillArchiveFill className='card_icon'/>
                 </div>
-                <h1>45</h1>
+                <h1>{approvedSellersCount}</h1>
             </div>
             <div className='card' style={{backgroundColor:"#c9b540"}}>
                 <div className='card-inner'>
@@ -79,7 +94,7 @@ function Home() {
                     <h3>PENDING REQUESTS</h3>
                     <BsFillBellFill className='card_icon'/>
                 </div>
-                <h1>13</h1>
+                <h1>{count}</h1>
             </div>
         </div>
 
