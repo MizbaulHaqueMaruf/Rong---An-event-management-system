@@ -1,7 +1,10 @@
 const events = require("../../models/eventModel");
 const sellers = require("../../models/sellerModel");
 const Order = require("../../models/Order");
-
+const { Cursor } = require("mongoose");
+const axios = require("axios");
+require("dotenv").config();
+const stripe = require("stripe")("sk_test_51OWhCHHyOH1NkwnJnqpUHUTeQ5dAptRdHOYOBNZa7SQgoPPJ8dYc6ODfAXKGe8FG4OWWG5zLkfgDm4UbRlream2d00serB8OL2");
 const getEvents = async (req, res) => {
   try {
     const all_events = await events.find();
@@ -46,18 +49,22 @@ const getEventbyID = async (req, res)=>{
 
 const createOrder = async (req, res) =>{
   try {
-    const { eventId, eventTitle, eventOrganizer, UserId} = req.body;
+    const { eventId, eventTitle, eventOrganizer, UserId, totalAmount, numberOfTickets, isPaid, sellerId} = req.body;
     const ticketId = generateRandomId(); // Function to generate a random ticket ID
     const eventDate = new Date().toISOString().split('T')[0]; // Get current date
-
+    console.log(req.body);
     // Create the order in the database
     const newOrder = new Order({
       eventId,
       eventTitle,
+      sellerId,
       eventOrganizer,
       ticketId,
       eventDate,
       UserId,
+      isPaid,
+      totalAmount,
+      numberOfTickets
     });
 
     await newOrder.save(); // Save the new order
@@ -72,5 +79,84 @@ const createOrder = async (req, res) =>{
 function generateRandomId() {
   return Math.random().toString(36).substr(2, 9); // Random alphanumeric ID
 }
+const getSellerbyEventId = async (req, res) => {
+  const eventId = req.params.id;
+  console.log("Event ID:", eventId); 
 
-module.exports = {getEvents, searchEvents, getEventbyID, createOrder};
+  try {
+    const event = await events.findById(eventId);
+    console.log("Event:", event); 
+
+    if (!event) res.json({ message: 'No such event exists' });
+
+    const sellerId = event.sellerId;
+    console.log("Seller ID:", sellerId); 
+
+    const seller = await sellers.findById(sellerId);
+    console.log("Seller:", seller); 
+
+    if (!seller) {
+      res.status(404).json({ message: "Seller is not found" });
+    }
+
+    res.json(seller);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+const deleteOrder = async (req, res) => {
+    const orderId = req.body.orderId;
+    try{
+      const order = Order.findById(orderId);
+      if(!order){
+        res.status(404).send({message: "Order not found!"});
+      }
+      order.delete();
+    }catch(err){
+      res.status(500).send({message: err.message});
+    }
+}
+
+const initiatePayment = async (req, res) => {
+
+  try{
+  const {eventTitle, unitPrice,platformCharge,numberOfTickets,totalAmount,eventId, sellerId } = req.body;
+  console.log(req.body);
+  const line_items = [
+    {
+      price_data: {
+        currency: "BDT",
+        product_data: {
+          name: eventTitle,
+        },
+        unit_amount: unitPrice*1000,
+      },
+      quantity: numberOfTickets,
+    },
+    {
+      price_data: {
+        currency: "BDT",
+        product_data: {
+          name: "Platform Charge",
+        },
+        unit_amount: platformCharge*10000,
+      },
+      quantity: 1,
+    },
+  ];
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types:["card"],
+    line_items:line_items,
+    mode:"payment",
+    success_url:"http://localhost:5173/payment/success",
+    cancel_url:"http://localhost:5173/payment/cancel",
+  });
+  res.json({id:session.id, message: "Hello!"});
+  }catch(error){
+    res.status(500).json({error:error});
+  }
+}
+
+module.exports = {getEvents, searchEvents, getEventbyID, createOrder , getSellerbyEventId,initiatePayment, deleteOrder};

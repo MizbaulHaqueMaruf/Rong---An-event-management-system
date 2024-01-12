@@ -11,7 +11,7 @@ const Navbar = () => {
   const [menu, setMenu] = useState(false);
   const navigate = useNavigate();
   const path = useLocation().pathname;
-
+  const { userId } = useContext(UserContext);
   const handleSearch = () => {
     if (prompt) {
       navigate(`/search/${prompt}`);
@@ -45,7 +45,7 @@ const Navbar = () => {
       <div className="hidden md:flex items-center justify-center space-x-2 md:space-x-4">
         {user ? (
           <h3>
-            <Link to="/profile" className="text-white">Profile</Link>
+            <Link to={`/profile/${userId}`} className="text-white">Profile</Link>
           </h3>
         ) : (
           <h3>

@@ -13,10 +13,16 @@ const orderSchema = new mongoose.Schema({
   eventOrganizer: { type: String },
   ticketId: { type: String },
   eventDate: { type: Date },
+  totalAmount:{type:Number},
+  numberOfSeats:{type:Number},
   UserId: {
     type: mongoose.Schema.ObjectId,
-    required: true,
+    required: true
   },
+  isPaid:{
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model("Order", orderSchema);
