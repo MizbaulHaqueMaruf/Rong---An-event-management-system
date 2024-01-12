@@ -10,7 +10,6 @@ const socket = require("socket.io");
 const adminRoutes = require("./routes/admin.js");
 const dataRoutes = require("./routes/data.js");
 const routesAuth = require("./routes/auth");
-
 const server = http.createServer(app);
 
 app.use(
@@ -141,6 +140,7 @@ app.use(cookieParser());
 app.use("/customerAPI/", require("./routes/CutomerRoutes/auth"));
 app.use("/userAPI/", require("./routes/CutomerRoutes/users"));
 app.use("/eventAPI/", require("./routes/CutomerRoutes/events"));
+app.use("/paymentAPI/", require("./routes/CutomerRoutes/payment"));
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/dashboard/sellerRoutes"));
 app.use("/api", require("./routes/order/orderRoutes"));
