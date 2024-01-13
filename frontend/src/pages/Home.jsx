@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import HomeFeeds from "../components/HomeFeeds";
@@ -8,6 +8,14 @@ import { UserContext } from "../context/UserContext";
 const Home = () => {
   const { user } = useContext(UserContext);
   const path = useLocation().pathname;
+  const referrer = document.referrer;
+
+  useEffect(() => {
+    if (referrer.includes("localhost:5137/payment/success")) {
+      alert("Email has been sent!"); 
+    }
+  }, [referrer]);
+
   return (
     <>
       <Navbar />

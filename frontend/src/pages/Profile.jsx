@@ -27,6 +27,7 @@ const fetchProfile=async ()=>{
      setfirstName(res.data.firstName)
      setlastName(res.data.lastName)
      setEmail(res.data.email)
+     console.log(user);
      //setPassword(res.data.password)
   }
   catch(err){
@@ -91,7 +92,7 @@ useEffect(()=>{
       <div className="min-h-[80vh] px-8 md:px-[200px] mt-8 flex md:flex-row flex-col-reverse md:items-start items-start">
         <div className="flex flex-col md:w-[70%] w-full mt-8 md:mt-0">
           <h1 className="text-xl font-bold mb-4">Your Orders:</h1>
-            <ProfileOrders/>
+            <ProfileOrders user ={user}/>
         </div>
         <div className="md:sticky md:top-12  flex justify-start md:justify-end items-start md:w-[30%] w-full md:items-end ">
         <div className=" flex flex-col space-y-4 items-start">

@@ -15,12 +15,12 @@ const EventCard = ({ event }) => (
       />
       <div className="p-4">
       <Link to={`/eventdetails/${event._id}`} className="hover:underline">
-          <h2 className="text-lg md:text-xl font-bold mb-2">{event.name}</h2>
+          <h2 className="text-lg md:text-xl font-bold mb-2 text-wrap">{event.name}</h2>
         </Link>
         <p className="text-sm text-gray-500">@{event.orgName}</p>
         <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
-          <p> </p> 
-          <p> </p>
+        <p className="font-bold">Ticket Price: {event?.price} BDT</p>
+        <p>{event?.date}</p>
         </div>
       </div>
     </div>
@@ -33,6 +33,8 @@ EventCard.propTypes = {
     name: PropTypes.string.isRequired,
     orgName: PropTypes.string.isRequired,
     images: PropTypes.array,
+    price: PropTypes.number,
+    date: PropTypes.date,
   }).isRequired,
 };
 

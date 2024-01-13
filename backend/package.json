@@ -26,9 +26,11 @@
     "moment": "^2.29.4",
     "mongoose": "^7.0.4",
     "nodemailer": "^6.9.8",
+    "path": "^0.12.7",
+    "pdfkit": "^0.14.0",
     "socket.io": "^4.6.1",
     "stripe": "^12.18.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

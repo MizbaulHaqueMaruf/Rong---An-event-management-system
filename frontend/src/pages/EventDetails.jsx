@@ -17,6 +17,7 @@ const EventDetails = () => {
   const [userComment, setUserComment] = useState('');
   const [activeTab, setActiveTab] = useState("home");
   const [eventData, setEventData] = useState(null);
+  const [order, setOrder] = useState(null);
   const { id } = useParams();
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentFailure, setPaymentFailure] = useState(false);
@@ -31,14 +32,15 @@ const EventDetails = () => {
   const submitReview = async () => {
     try {
       // Make a POST request to submit the review to the backend
-      const response = await fetch('http://localhost:5000/eventAPI/Customer/events/submitReview', {
+      const response = await fetch('http://localhost:5000/reviewAPI/Customer/events/submitReview', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          userId: userId, 
           eventId: eventData._id,
-          rating: userRating,
+          stars: userRating,
           comment: userComment,
         }),
       });
@@ -58,7 +60,7 @@ const EventDetails = () => {
   };
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/eventAPI/Customer/events/reviews/${id}`);
+      const response = await fetch(`http://localhost:5000/ReviewAPI/Customer/events/reviews/${id}`);
       if (response.ok) {
         const reviewsData = await response.json();
         setReviews(reviewsData);
@@ -135,6 +137,8 @@ const EventDetails = () => {
       });
 
       if (response.ok) {
+        setOrder(await response.json());
+        console.log(order);
         setPaymentSuccess(true); // Show success pop-up
       } else {
         setPaymentFailure(true); // Show failure pop-up
@@ -152,12 +156,10 @@ const EventDetails = () => {
       .then((data) => {
         console.log("Received data:", data);
         setEventData(data);
+        fetchReviews();
       })
       .catch((error) => console.error("Error fetching event details:", error));
-      if (activeTab === 'reviews') {
-        console.log("this is reviews tab");
-        fetchReviews();
-      }
+    
   }, [id]);  
   return (
     <div>
@@ -212,6 +214,7 @@ const EventDetails = () => {
           >
             Reviews
           </button>
+          <hr></hr>
         </div>
        {activeTab === "home" && (
   <div className="mt-6 flex space-x-4">
@@ -248,7 +251,7 @@ const EventDetails = () => {
     <div className="w-3/4 ml-100">
       <div className="bg-white p-4 rounded shadow text-center w-3/4 ml-100">
         <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
-         Description
+         About This Event 
         </div>
         <div className="max-h-60 overflow-y-auto">
           {eventData?.description || "Description"} 
@@ -348,15 +351,20 @@ const EventDetails = () => {
           </div>
         </div>
       )}
+         </div>
+          </div>
+        )}
+        
       {activeTab === 'reviews' && (
+ 
   <div className="mt-6 flex flex-col items-center">
     {/* Section for displaying other users' reviews */}
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4">Top Reviews</h2>
-      {reviews.map((review) => (
-        <div key={review.id} className="mb-4">
+      {reviews && reviews.map((review) => (
+        <div key={review.userName} className="mb-4">
           <p>{review.comment}</p>
-          <p>Rating: {review.rating} stars</p>
+          <p>Rating: {review.stars} stars</p>
           {/* Add additional information if needed */}
         </div>
       ))}
@@ -408,9 +416,7 @@ const EventDetails = () => {
   </div>
 )}
             
-            </div>
-          </div>
-        )}
+         
       </div>
       <Footer />
     </div>

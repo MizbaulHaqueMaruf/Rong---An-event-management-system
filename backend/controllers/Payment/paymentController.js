@@ -3,14 +3,14 @@ const rongWallet = require("../../models/rongWallet");
 const Order = require("../../models/Order");
 const sellers = require("../../models/sellerModel");
 const stripe = require("stripe")("sk_test_51OWhCHHyOH1NkwnJnqpUHUTeQ5dAptRdHOYOBNZa7SQgoPPJ8dYc6ODfAXKGe8FG4OWWG5zLkfgDm4UbRlream2d00serB8OL2");
+const uuid = require("uuid");
 const sellerPay = async(req, res) => {
     try{
-    const sessionId = req.query.sessionId;
-    const sessionDetails = await stripe.checkout.sessions.retrieve(sessionId);     
-    // Extract relevant data from the sessionDetails
-    const { eventId,customerId, unitPrice,numberOfTickets} = sessionDetails.metadata;
+    const { eventId,customerId, unitPrice,numberOfTickets} = req.body;
+    
     console.log(req.body);
 
+    transactionId = uuid();    
     const newWallet = new sellerWallet({
                 sellerId,
                 customerId,
