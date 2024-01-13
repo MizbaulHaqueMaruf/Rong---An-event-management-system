@@ -8,7 +8,7 @@ const OrganizationList = () => {
     fetch("http://localhost:5000/api/data/insert-data")
       .then((response) => response.json())
       .then((data) => {
-        const filteredOrganizations = data.filter((org) => org.status === "inactive");
+        const filteredOrganizations = data.filter((org) => org.flag === true);
         setOrganizations(filteredOrganizations);
       })
       .catch((error) => console.error("Error fetching organizations:", error));

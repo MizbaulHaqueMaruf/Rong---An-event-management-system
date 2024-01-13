@@ -16,8 +16,10 @@ function Home() {
     fetch('http://localhost:5000/api/data/insert-data')
       .then((response) => response.json())
       .then((data) => {
-        setCount(data.length);
+        const a= data.filter((seller)=>seller.flag===true);
+        
         const filteredSellers = data.filter((seller) => seller.status === 'active');
+        setCount(a.length);
         setApprovedSellersCount(filteredSellers.length);
       })
       .catch((error) => console.error('Error fetching approved sellers:', error));

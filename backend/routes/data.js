@@ -55,7 +55,8 @@ router.post("/seller-approve/:id", async (req, res) => {
       return res.status(404).json({ message: "Seller not found" });
     }
 
-    seller.status = "active";
+    seller.status = 'active';
+    seller.flag=false;
     await seller.save();
     res.json(seller);
 
@@ -98,7 +99,8 @@ router.post("/seller-reject/:id", async (req, res) => {
       return res.status(404).json({ message: "Seller not found" });
     }
 
-    seller.status = "inactive";
+    seller.status = 'inactive';
+    seller.flag=false;
     await seller.save();
     res.json(seller);
 

@@ -34,7 +34,7 @@ const CardOrg = ({ title, email, link, id }) => {
     setRejectClicked(true);
     await fetch(`http://localhost:5000/api/data/seller-reject/${id}`, { method: 'POST' });
     window.alert("Seller has been rejected.");
-    //window.location.reload();
+    window.location.reload();
   };
   return (
     <div className="card-containerr">
@@ -47,7 +47,7 @@ const CardOrg = ({ title, email, link, id }) => {
        <a href={link} onClick={sendMail} className="card-btnr">
         Ask for documents
       </a>
-      <a href={link} onClick={approveSeller} className="card-btnr" style={{ color: approveClicked ? 'green' : 'white' }}>
+      <a href={link} onClick={approveSeller} className="card-btnr" style={{ backgroundColor: approveClicked ? '#2b333a' : '#324672' }}>
         Approve
       </a>
       <a href={link} onClick={rejectSeller} className="card-btnr" style={{ backgroundColor: rejectClicked ? '#2b333a' : '#324672' }}>
