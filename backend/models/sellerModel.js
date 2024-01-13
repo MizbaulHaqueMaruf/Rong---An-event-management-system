@@ -39,6 +39,10 @@ const sellerSchema = new Schema(
       type: Object,
       default: {},
     },
+    flag:{
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
