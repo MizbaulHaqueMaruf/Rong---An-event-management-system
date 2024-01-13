@@ -55,7 +55,8 @@ router.post("/seller-approve/:id", async (req, res) => {
       return res.status(404).json({ message: "Seller not found" });
     }
 
-    seller.status = "active";
+    seller.status = 'active';
+    seller.flag=false;
     await seller.save();
     res.json(seller);
 
@@ -98,7 +99,8 @@ router.post("/seller-reject/:id", async (req, res) => {
       return res.status(404).json({ message: "Seller not found" });
     }
 
-    seller.status = "inactive";
+    seller.status = 'inactive';
+    seller.flag=false;
     await seller.save();
     res.json(seller);
 
@@ -145,30 +147,30 @@ var transporter = nodemailer.createTransport({
 
 router.post("/send-mail/:id", async (req, res) => {
   try {
-    const seller = await Seller.findById(req.params.id);
-    const email = seller.email;
+      const seller = await Seller.findById(req.params.id);
+         const email = seller.email;
+          const mailBody= req.body.mailBody;
+        console.log(email)
 
-    console.log("here");
-    console.log(email);
+      if(seller){
+          const mailOptions = {
+              from:process.env.AUTH_EMAIL,
+              to:email,
+              subject:"Seller Approval",
+              html:`<h2>Please provide the necessary information</h2>
+              <h1>${mailBody}</h1>`
+          }
 
-    if (seller) {
-      const mailOptions = {
-        from: process.env.AUTH_EMAIL,
-        to: email,
-        subject: "Seller Approval",
-        html: `<h2>Please provide the necessary information</h2>
-              <h1>Approved</h1>`,
-      };
+          transporter.sendMail(mailOptions,(error,info)=>{
+              if(error){
+                  console.log("error",error);
+                  res.send({message:"Could not send email"})
+              }else{
+                  console.log("Email sent",info.response);
+              }
+          })
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log("error", error);
-          res.send({ message: "Could not send email" });
-        } else {
-          console.log("Email sent", info.response);
-        }
-      });
-    }
+      }
   } catch (error) {
     console.log(error);
     res.send({ message: "Invalid user" });
