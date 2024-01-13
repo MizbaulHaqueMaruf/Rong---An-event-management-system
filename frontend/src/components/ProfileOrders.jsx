@@ -6,7 +6,7 @@ const ProfileOrders = (user) => {
   const [order, setOrder] = useState([]);
  useEffect(() => {
     console.log(user.user._id);
-    fetch(`http://localhost:5000/userAPI/Customer/getOrders/${user}`)
+    fetch(`http://localhost:5000/userAPI/Customer/getOrders/${user.user._id}`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Received data:", data);
@@ -18,7 +18,7 @@ const ProfileOrders = (user) => {
     <div className="w-full flex mt-8 space-x-4">
       {/* left */}
       <div className="w-[35%] h-[200px] flex justify-center items-center">
-        <img src={order?.eventDetailes?.images} alt="" className="h-full w-full object-cover" />
+        <img src={order?.eventDetailes?.images[0]} alt="" className="h-full w-full object-cover" />
       </div>
       {/* right */}
       <div className="flex flex-col w-[65%]">

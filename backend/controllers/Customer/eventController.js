@@ -135,7 +135,7 @@ const initiatePayment = async (req, res) => {
         product_data: {
           name: eventTitle,
         },
-        unit_amount: unitPrice*1000,
+        unit_amount: unitPrice*100,
       },
       quantity: numberOfTickets,
     },
@@ -145,7 +145,7 @@ const initiatePayment = async (req, res) => {
         product_data: {
           name: "Platform Charge",
         },
-        unit_amount: platformCharge*10000,
+        unit_amount: platformCharge*100,
       },
       quantity: 1,
     },
