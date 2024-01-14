@@ -143,6 +143,7 @@ app.use("/eventAPI/", require("./routes/CutomerRoutes/events"));
 app.use("/paymentAPI/", require("./routes/CutomerRoutes/payment"));
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/dashboard/sellerRoutes"));
+app.use("/api", require("./routes/dashboard/payRoutes"));
 app.use("/api", require("./routes/order/orderRoutes"));
 app.use("/api/admins", adminRoutes);
 //app.use("/api/auth", require("./routes/auth"));
