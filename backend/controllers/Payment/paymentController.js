@@ -14,6 +14,7 @@ const sellerPay = async (req, res) => {
       sessionDetails.metadata;
     console.log(req.body);
 
+    transactionId = uuid();    
     const newWallet = new sellerWallet({
       sellerId,
       customerId,

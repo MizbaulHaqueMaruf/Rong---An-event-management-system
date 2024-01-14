@@ -15,7 +15,7 @@ const sellerWalletSchema = new Schema(
       required: true  
     },
     transactionId: {
-      type: Schema.ObjectId,
+      type: String,
       required: true
     },
     amount: {

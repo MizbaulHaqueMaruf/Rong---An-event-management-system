@@ -22,7 +22,7 @@ const App = () => {
       <Route exact path="/search/:prompt" element={<Home/>}/> 
       <Route exact path="/profile/:id" element={<Profile/>}/>
       <Route exact path="/eventdetails/:id" element={<EventDetails/>}/>
-      <Route exact path="/payment/success" element={<Success/>}/>
+      <Route exact path="/payment/success/:id" element={<Success/>}/>
       <Route exact path="/payment/cancel" element={<Cancel/>}/>
       </Routes>
       </UserContextProvider>

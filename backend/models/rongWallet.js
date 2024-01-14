@@ -15,7 +15,7 @@ const RongWalletSchema = new Schema(
       required: true  
     },
     transactionId: {
-      type: Schema.ObjectId,
+      type: String,
       required: true
     },
     totalAmount: {

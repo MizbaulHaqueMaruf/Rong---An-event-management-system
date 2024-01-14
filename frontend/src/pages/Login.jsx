@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import RongLogo from "../assets/ronglogo.jpg"
 import Footer from "../components/Footer"
@@ -10,7 +10,7 @@ const Login = () => {
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
   const [error,setError]=useState(false)
-  const {setUser}=useContext(UserContext)
+  const {user, setUser}=useContext(UserContext)
   const navigate=useNavigate()
 
   const handleLogin=async()=>{
@@ -26,8 +26,12 @@ const Login = () => {
       console.log(err)
 
     }
-
   }
+  useEffect (()=>{
+      if(user){
+        navigate("/");
+      }
+  });
   return (
     <>
     <div className="bg-black flex items-center justify-between px-6 md:px-[40px] py-4">

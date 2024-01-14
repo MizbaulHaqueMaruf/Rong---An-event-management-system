@@ -8,15 +8,13 @@ import image1 from "../assets/Dhaka_folk_fest.jpg";
 import EventOrganizer from "../components/EventOrganizer";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import Review from "../components/Review";
 import { UserContext } from "../context/UserContext";
-
 const EventDetails = () => {
   const {isLoggedIn, userId } = useContext(UserContext);
-  const [reviews, setReviews] = useState([]);
-  const [userRating, setUserRating] = useState(0);
-  const [userComment, setUserComment] = useState('');
   const [activeTab, setActiveTab] = useState("home");
   const [eventData, setEventData] = useState(null);
+  const [order, setOrder] = useState(null);
   const { id } = useParams();
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentFailure, setPaymentFailure] = useState(false);
@@ -24,51 +22,6 @@ const EventDetails = () => {
   const navigate = useNavigate();
   const latitude = eventData?.latitude || 0;
   const longitude = eventData?.longitude || 0;
-  const handleStarClick = (rating) => {
-    // Set the user's selected rating
-    setUserRating(rating);
-  }
-  const submitReview = async () => {
-    try {
-      // Make a POST request to submit the review to the backend
-      const response = await fetch('http://localhost:5000/eventAPI/Customer/events/submitReview', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          eventId: eventData._id,
-          rating: userRating,
-          comment: userComment,
-        }),
-      });
-
-      if (response.ok) {
-        // Successfully submitted review
-        console.log('Review submitted successfully');
-        // Optionally, you can fetch updated reviews after submission
-        fetchReviews();
-      } else {
-        // Failed to submit review
-        console.error('Failed to submit review');
-      }
-    } catch (error) {
-      console.error('Error submitting review:', error);
-    }
-  };
-  const fetchReviews = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/eventAPI/Customer/events/reviews/${id}`);
-      if (response.ok) {
-        const reviewsData = await response.json();
-        setReviews(reviewsData);
-      } else {
-        console.error('Failed to fetch reviews');
-      }
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };
   
   const handlePayNow = async ()=>{
     const stripe  = await loadStripe("pk_test_51OWhCHHyOH1NkwnJ12v0lb1QHyopFCGdPU718AURyJ1puglQG8QeKfdJ8oVU67QVeNpNUhksv9a3TklM1TwQHRlG00xO0JxwVv")
@@ -82,25 +35,32 @@ const EventDetails = () => {
         unitPrice: eventData?.price,
         totalAmount: totalPrice+ platformBill,
         platformCharge: platformBill,
+        orderId:order._id,
     }
     console.log(body);
     const headers={
       "Content-Type": "application/json"
     }
-    const response = await fetch("http://localhost:5000/eventAPI/Customer/events/create-checkout-session",{
-       method: "POST",
-       headers: headers,
-       body: JSON.stringify(body)
-    })
-    const session = await response.json();
-    console.log(session);
-    const result = stripe.redirectToCheckout({
-        sessionId: session.id,
+    try {
+      const response = await fetch("http://localhost:5000/eventAPI/Customer/events/create-checkout-session", {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(body),
+      });
 
-    });
-    if(result.error){
-      console.log(result.error);
-    }
+      const session = await response.json();
+      console.log(session);
+      
+      const result = await stripe.redirectToCheckout({
+          sessionId: session.id,
+      });
+
+      if (result.error) {
+          console.error(result.error);
+      }
+  } catch (error) {
+      console.error(error);
+  }
   }
   const handleNumTicketsChange = (e) => {
     const tickets = parseInt(e.target.value, 10);
@@ -135,6 +95,9 @@ const EventDetails = () => {
       });
 
       if (response.ok) {
+        const newOrder = await response.json();
+        setOrder(newOrder);
+        console.log(order);
         setPaymentSuccess(true); // Show success pop-up
       } else {
         setPaymentFailure(true); // Show failure pop-up
@@ -154,10 +117,7 @@ const EventDetails = () => {
         setEventData(data);
       })
       .catch((error) => console.error("Error fetching event details:", error));
-      if (activeTab === 'reviews') {
-        console.log("this is reviews tab");
-        fetchReviews();
-      }
+    
   }, [id]);  
   return (
     <div>
@@ -212,6 +172,7 @@ const EventDetails = () => {
           >
             Reviews
           </button>
+          <hr></hr>
         </div>
        {activeTab === "home" && (
   <div className="mt-6 flex space-x-4">
@@ -248,7 +209,7 @@ const EventDetails = () => {
     <div className="w-3/4 ml-100">
       <div className="bg-white p-4 rounded shadow text-center w-3/4 ml-100">
         <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
-         Description
+         About This Event 
         </div>
         <div className="max-h-60 overflow-y-auto">
           {eventData?.description || "Description"} 
@@ -291,12 +252,12 @@ const EventDetails = () => {
             Place Order
           </button>
         </form>
-        <p className="text-base text-gray-600 my-2">Payment Options:</p>
+        <p className="text-base text-gray-600 my-2">Payment Instructions:</p>
         <p className="text-sm text-gray-500">
-          You can pay via any media
+          You will be redirected to Strip for payment 
         </p>
         <p className="text-sm text-gray-500">
-          Bkash or Nagad. Use any method you prefer.
+         Use Visa Card or Credit Card to purchase. Have valid credit card number 
         </p>
               </div>
               {/* Pop-up for payment success */}
@@ -348,69 +309,13 @@ const EventDetails = () => {
           </div>
         </div>
       )}
-      {activeTab === 'reviews' && (
-  <div className="mt-6 flex flex-col items-center">
-    {/* Section for displaying other users' reviews */}
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">Top Reviews</h2>
-      {reviews.map((review) => (
-        <div key={review.id} className="mb-4">
-          <p>{review.comment}</p>
-          <p>Rating: {review.rating} stars</p>
-          {/* Add additional information if needed */}
-        </div>
-      ))}
-    </div>
-
-    {/* Section for leaving a review */}
-    <div className="w-1/2">
-      <h2 className="text-2xl font-bold mb-4">Leave Your Review</h2>
-
-      {/* Star rating section */}
-      <div className="flex items-center mb-4">
-        <p className="mr-2">Your Rating:</p>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            key={star}
-            onClick={() => handleStarClick(star)}
-            className={`text-2xl ${
-              userRating >= star ? 'text-yellow-500' : 'text-gray-400'
-            }`}
-          >
-            &#9733;
-          </button>
-        ))}
-      </div>
-
-      {/* Comment box */}
-      <div>
-        <label htmlFor="comment" className="block text-gray-600 mb-2">
-          Your Comment:
-        </label>
-        <textarea
-          id="comment"
-          name="comment"
-          rows="4"
-          className="w-full border p-2 rounded"
-          value={userComment}
-          onChange={(e) => setUserComment(e.target.value)}
-        ></textarea>
-      </div>
-
-      {/* Submit button */}
-      <button
-        className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
-        onClick={submitReview}
-      >
-        Submit Review
-      </button>
-    </div>
-  </div>
-)}
-            
-            </div>
+         </div>
           </div>
         )}
+        
+      {activeTab === 'reviews' && (
+          <Review/>
+      )} 
       </div>
       <Footer />
     </div>
