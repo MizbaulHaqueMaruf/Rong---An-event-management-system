@@ -145,6 +145,7 @@ app.use("/reviewAPI", require("./routes/CutomerRoutes/review"));
 app.use("/ticketAPI", require("./routes/CutomerRoutes/ticket"));
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/dashboard/sellerRoutes"));
+app.use("/api", require("./routes/dashboard/payRoutes"));
 app.use("/api", require("./routes/order/orderRoutes"));
 app.use("/api/admins", adminRoutes);
 //app.use("/api/auth", require("./routes/auth"));
