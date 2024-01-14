@@ -93,7 +93,11 @@ const sendEmail = async (req, res) => {
     ],
   };
     console.log(mailOptions.attachments);
+    console.log(transporter);
     const info = await transporter.sendMail(mailOptions);
+    if(!info){
+      console.log("Email failed");
+    }
     console.log('Email sent: ', info.response);
   }catch(error){
     res.status(500).send({message: error.message});

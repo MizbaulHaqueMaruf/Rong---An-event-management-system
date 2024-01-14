@@ -25,14 +25,16 @@ const Success = () => {
         })
           .then((response) => response.json())
           .then(() => {
-            
+            alert('Ticket sent successfully');
           })
           .catch((error) => console.error('Error in the second backend route:', error));
       })
-      .catch((error) => console.error("Sending Ticket:", error))
+      .catch((error) => {
+        console.error("Sending Ticket:", error)
+        alert('Sending Ticket Failed!');  
+      })
       .finally(() => {
           setSuccess(true);
-          alert('Ticket sent successfully');
           navigate('/');
       });
   }, [params, success, navigate]);

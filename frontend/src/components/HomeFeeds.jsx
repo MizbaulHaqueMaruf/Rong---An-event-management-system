@@ -20,7 +20,7 @@ const EventCard = ({ event }) => (
         <p className="text-sm text-gray-500">@{event.orgName}</p>
         <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
         <p className="font-bold">Ticket Price: {event?.price} BDT</p>
-        <p>{event?.date}</p>
+        <p>{event?.eventDate}</p>
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@ EventCard.propTypes = {
     orgName: PropTypes.string.isRequired,
     images: PropTypes.array,
     price: PropTypes.number,
-    date: PropTypes.date,
+    eventDate: PropTypes.date,
   }).isRequired,
 };
 

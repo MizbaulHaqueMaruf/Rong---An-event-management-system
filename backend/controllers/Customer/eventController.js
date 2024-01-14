@@ -71,7 +71,7 @@ const createOrder = async (req, res) =>{
 
     await newOrder.save(); // Save the new order
 
-    res.status(201).json({ message: 'Order created successfully' });
+    res.status(201).json(newOrder);
   } catch (error) {
     console.error('Error creating order:', error);
     res.status(500).json({ message: 'Failed to create order' });
@@ -124,7 +124,7 @@ const deleteOrder = async (req, res) => {
 const initiatePayment = async (req, res) => {
 
   try{
-  const {eventTitle, unitPrice,platformCharge,numberOfTickets,totalAmount,eventId, sellerId, customerId} = req.body;
+  const {eventTitle, unitPrice, orderId, platformCharge,numberOfTickets,totalAmount,eventId, sellerId, customerId} = req.body;
   console.log(req.body);
   const transactionId = generateRandomId();
   console.log(transactionId);
@@ -167,6 +167,10 @@ const initiatePayment = async (req, res) => {
     numberOfTickets
   });
   await newRongWallet.save();
+  await Order.updateOne(
+    { _id: orderId }, 
+    { $set: { isPaid: true } } 
+  );
   const newWallet = new sellerWallet({
     sellerId,
     customerId,
