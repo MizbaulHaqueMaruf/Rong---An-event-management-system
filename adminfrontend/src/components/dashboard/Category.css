@@ -28,13 +28,14 @@ label {
     display: block;
     margin-bottom: 10px;
     font-size: 1.2em;
-    color: #333;
+    color: #ffffff;
 }
 
 input {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
+    color:white;
 }
 
 button {

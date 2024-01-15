@@ -30,11 +30,11 @@ const Login = () => {
 	};
 
 	return (
-		<div>
-		<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-		  <div style={{background: '#1c356f', width: '640px', padding: '20px', border: '1px solid #ccc', borderRadius: '20px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}>
+		<div style={{backgroundColor:'#2b333a'}}>
+		<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+		  <div style={{background: 'rgb(7 19 47)', width: '640px', padding: '20px', border: '1px solid #ccc', borderRadius: '20px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}>
 			<form onSubmit={handleSubmit}>
-			  <h1 style={{ fontSize: '24px',color:'white', textAlign: 'center', marginBottom: '20px' }}>Login to Your Account</h1>
+			  <h1 style={{ fontSize: '24px',color:'white', textAlign: 'center', marginBottom: '20px' }}>Login to Admin Panel</h1>
 			  <input
 				type="email"
 				placeholder="Email"
