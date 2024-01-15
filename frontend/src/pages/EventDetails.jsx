@@ -89,7 +89,7 @@ const EventDetails = () => {
           eventId : eventData._id,
           UserId: userId,
           totalAmount: totalPrice,
-          numberOfTickets: numTickets,
+          numberOfSeats: numTickets,
           isPaid: false
         }),
       });
