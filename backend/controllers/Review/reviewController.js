@@ -1,5 +1,6 @@
 const Review =  require("../../models/reviewModel");
 const User = require("../../models/User");
+const events = require("../../models/eventModel");
 const getReviewsByEventId = async (req, res)=>{
     const eventId = req.params.eventId;
     try {
@@ -18,6 +19,10 @@ const createReview = async(req, res) => {
             res.status(400).json({ message: "User not found"});
         }
         const userName = user.firstName + " " + user.lastName;
+        const event = await events.findById(eventId);
+        if(!event){
+            res.status(400).json({message: "Event Not Found"});
+        }   
         const newReview = new Review({
             userId,
             comment, 
@@ -26,6 +31,10 @@ const createReview = async(req, res) => {
             stars,
         })
         await newReview.save();
+        await events.updateOne(
+            { _id: orderId }, 
+            { $set: { rating: (event.rating + stars)/2 } } 
+          );
         res.status(200).json({message: "Review saved successfully"});
     }catch (error) {
     }

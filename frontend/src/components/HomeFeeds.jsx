@@ -3,10 +3,16 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import DummyImage from "../assets/Dhaka_folk_fest.jpg";
 
-// need to add the event dates to the <p> tags which are empty now 
 
-const EventCard = ({ event }) => (
-  <div className="w-full md:w-1/2 lg:w-1/3 p-2 md:p-4">
+
+const EventCard = ({ event }) => {
+  const formatEventDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const eventDate = new Date(dateString);
+    return eventDate.toLocaleDateString('bn-BD', options);
+  };
+  return(  
+  <div className="w-full md:w-1/3 lg:w-1/3 p-6 md:p-5">
     <div className="bg-white rounded-lg shadow-md">
       <img
         src={event.images && event.images.length > 0 ? event.images[0] : DummyImage}
@@ -19,13 +25,17 @@ const EventCard = ({ event }) => (
         </Link>
         <p className="text-sm text-gray-500">@{event.orgName}</p>
         <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
-        <p className="font-bold">Ticket Price: {event?.price} BDT</p>
-        <p>{event?.eventDate}</p>
+        <p>Event Date: {formatEventDate(event?.eventDate)}</p>
+        <p className="text-sm">Rating: {event?.rating !== 0 ? event?.rating.toFixed(1) : "Not Rated"}</p>
+        </div>
+        <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
+          <p className="font-bold">Ticket Price: {event?.price} BDT</p>
         </div>
       </div>
     </div>
   </div>
-);
+  );
+};
 
 EventCard.propTypes = {
   event: PropTypes.shape({
@@ -35,6 +45,7 @@ EventCard.propTypes = {
     images: PropTypes.array,
     price: PropTypes.number,
     eventDate: PropTypes.date,
+    rating: PropTypes.number,
   }).isRequired,
 };
 
@@ -66,8 +77,8 @@ const HomeFeeds = () => {
   return (
     <div className="w-full mt-8">
       <div className="flex flex-wrap -mx-2 md:-mx-4">
-        {events.map((event) => (
-          <EventCard key={event._id} event={event} />
+        {events && events.map((event) => (
+          <EventCard key={event._id} event={event}  />
         ))}
       </div>
       <div className="flex justify-center mt-4">

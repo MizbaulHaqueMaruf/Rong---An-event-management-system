@@ -94,7 +94,7 @@ const sendEmail = async (req, res) => {
   };
     console.log(mailOptions.attachments);
     console.log(transporter);
-    const info = await transporter.sendMail(mailOptions,(error, info) => {
+    const info = await transporter.sendMail(mailOptions,(info, error) => {
       if (error) {
           return console.log(error);
       }

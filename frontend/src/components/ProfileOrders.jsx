@@ -10,13 +10,14 @@ const ProfileOrders = ({ order }) => {
   const handlePay= async()=>{
     const stripe  = await loadStripe("pk_test_51OWhCHHyOH1NkwnJ12v0lb1QHyopFCGdPU718AURyJ1puglQG8QeKfdJ8oVU67QVeNpNUhksv9a3TklM1TwQHRlG00xO0JxwVv")
     const platformBill = Math.ceil(order?.totalAmount *0.05);
+    console.log(order?.eventDetails);
     const body ={
         eventTitle: order?.eventDetails[0]?.name,
         customerId:userId,
         eventId:order?.eventDetails[0]?._id,
         sellerId:order?.sellerId,
         numberOfTickets: order?.numberOfSeats,
-        unitPrice: order?.eventDetails[0]?.price,
+        unitPrice: order?.totalAmount/order?.numberOfSeats,
         totalAmount: order?.totalAmount+ platformBill,
         platformCharge: platformBill,
         orderId:order._id,
@@ -46,7 +47,8 @@ const ProfileOrders = ({ order }) => {
       console.error(error);
   }
   }
-  const handleDelete= async()=>{
+  const handleDelete= async(e)=>{
+    e.preventDefault();
     try{
       const res=await axios.delete(`http://localhost:5000/eventAPI/Customer/events/deleteOrder/${order?._id}`);
       console.log(res);
