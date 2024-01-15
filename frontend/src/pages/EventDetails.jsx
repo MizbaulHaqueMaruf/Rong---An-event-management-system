@@ -20,25 +20,23 @@ const EventDetails = () => {
   const [paymentFailure, setPaymentFailure] = useState(false);
   const [numTickets, setNumTickets] = useState(0);
   const navigate = useNavigate();
-  const latitude = eventData?.latitude || 0;
-  const longitude = eventData?.longitude || 0;
-
-  const handlePayNow = async () => {
-    const stripe = await loadStripe(
-      "pk_test_51OWhCHHyOH1NkwnJ12v0lb1QHyopFCGdPU718AURyJ1puglQG8QeKfdJ8oVU67QVeNpNUhksv9a3TklM1TwQHRlG00xO0JxwVv"
-    );
-    const platformBill = Math.ceil(totalPrice * 0.05);
-    const body = {
-      eventTitle: eventData?.name,
-      customerId: userId,
-      eventId: eventData?._id,
-      sellerId: eventData?.sellerId,
-      numberOfTickets: numTickets,
-      unitPrice: eventData?.price,
-      totalAmount: totalPrice + platformBill,
-      platformCharge: platformBill,
-      orderId: order._id,
-    };
+  const latitude = eventData.latitude || 23.94;
+  const longitude = eventData.longitude || 90.38;
+  
+  const handlePayNow = async ()=>{
+    const stripe  = await loadStripe("pk_test_51OWhCHHyOH1NkwnJ12v0lb1QHyopFCGdPU718AURyJ1puglQG8QeKfdJ8oVU67QVeNpNUhksv9a3TklM1TwQHRlG00xO0JxwVv")
+    const platformBill = Math.ceil(totalPrice *0.05);
+    const body ={
+        eventTitle: eventData?.name,
+        customerId:userId,
+        eventId:eventData?._id,
+        sellerId:eventData?.sellerId,
+        numberOfTickets: numTickets,
+        unitPrice: eventData?.price,
+        totalAmount: totalPrice+ platformBill,
+        platformCharge: platformBill,
+        orderId:order._id,
+    }
     console.log(body);
     const headers = {
       "Content-Type": "application/json",
@@ -185,47 +183,51 @@ const EventDetails = () => {
           </button>
           <hr></hr>
         </div>
-        {activeTab === "home" && (
-          <div className="mt-6 flex space-x-4">
-            <div className="w-1/4 ml-10 mr-20">
-              <div className="bg-white p-4 rounded shadow">
-                <div className="text-2xl text-center font-bold text-black mb-4 rounded shadow-2xl">
-                  Time
-                </div>
-                <div className="text-center">12:00 PM - 3:00 PM</div>
-              </div>
-              <div className="bg-white p-4 text-center"></div>
-              <div className="bg-white p-4 rounded shadow">
-                <div className="text-2xl text-center font-bold text-black mb-4 shadow-2xl">
-                  Location
-                </div>
-                <div>
-                  {/* Add the map here */}
-                  <MapContainer
-                    center={[latitude, longitude]}
-                    zoom={13}
-                    style={{ height: "200px", width: "100%" }}
-                  >
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    <Marker position={[latitude, longitude]}>
-                      <Popup>Location</Popup>
-                    </Marker>
-                  </MapContainer>
-                </div>
-              </div>
-            </div>
-            <div className="w-3/4 ml-100">
-              <div className="bg-white p-4 rounded shadow text-center w-3/4 ml-100">
-                <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
-                  About This Event
-                </div>
-                <div className="max-h-60 overflow-y-auto">
-                  {eventData?.description || "Description"}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+       {activeTab === "home" && (
+  <div className="mt-16 flex space-x-4">
+    <div className="w-1/4 ml-10 mr-20">
+      <div className="bg-white p-4 rounded shadow">
+        <div className="text-2xl text-center font-bold text-black mb-4 rounded shadow-2xl">
+          Time
+        </div>
+        <div className="text-center">12:00 PM - 3:00 PM</div>
+      </div>
+      <div className="bg-white p-4 text-center">
+      </div>
+      <div className="bg-white p-4 rounded shadow">
+        <div className="text-2xl text-center font-bold text-black mb-4 shadow-2xl">
+          Location
+        </div>
+        <div>
+          {/* Add the map here */}
+          <MapContainer
+            center={[latitude, longitude]}
+            zoom={13}
+            style={{ height: "200px", width: "100%" }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[latitude, longitude]}>
+              <Popup>Location</Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+      </div>
+    </div>
+    <div className="w-3/4 ml-100">
+      <div className="bg-white p-4 rounded shadow text-center w-3/4 ml-100">
+        <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
+         About This Event 
+        </div>
+        <div className="max-h-60 overflow-y-auto">
+          {eventData?.description || "Description"} 
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 
         {activeTab === "organizer" && (
           <div className="mt-6 flex flex-col items-center">
@@ -239,43 +241,35 @@ const EventDetails = () => {
                 Price for Each Seat: {eventData?.price || 100}
               </div>
               <div className="mt-4">
-                <form className="my-4">
-                  <label
-                    htmlFor="numTickets"
-                    className="text-base text-gray-600"
-                  >
-                    Number of Tickets:
-                  </label>
-                  <input
-                    type="number"
-                    id="numTickets"
-                    name="numTickets"
-                    min="0"
-                    value={numTickets}
-                    onChange={handleNumTicketsChange}
-                    className="border rounded-md p-2 mx-2"
-                  />
-                  <div className="text-base text-gray-600 my-2">
-                    Total Amount: {totalPrice}
-                  </div>
-                  <button
-                    className="bg-blue-500 text-white py-2 px-4 rounded"
-                    onClick={handlePlaceOrder}
-                    disabled={isDisabled}
-                  >
-                    Place Order
-                  </button>
-                </form>
-                <p className="text-base text-gray-600 my-2">
-                  Payment Instructions:
-                </p>
-                <p className="text-sm text-gray-500">
-                  You will be redirected to Strip for payment
-                </p>
-                <p className="text-sm text-gray-500">
-                  Use Visa Card or Credit Card to purchase. Have valid credit
-                  card number
-                </p>
+              <form className="my-4">
+          <label htmlFor="numTickets" className="text-base text-gray-600">
+            Number of Tickets:
+          </label>
+          <input
+            type="number"
+            id="numTickets"
+            name="numTickets"
+            min="0"
+            value={numTickets}
+            onChange={handleNumTicketsChange}
+            className="border rounded-md p-2 mx-2"
+          />
+          <div className="text-base text-gray-600 my-2">Total Amount: {totalPrice}</div>
+          <button
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+            onClick={handlePlaceOrder}
+            disabled={isDisabled}
+          >
+            Place Order
+          </button>
+        </form>
+        <p className="text-base text-gray-600 my-2">Payment Instructions:</p>
+        <p className="text-sm text-gray-500">
+          You will be redirected to Stripe for payment 
+        </p>
+        <p className="text-sm text-gray-500">
+         Use Visa Card or Credit Card to purchase. Have valid credit card number 
+        </p>
               </div>
               {/* Pop-up for payment success */}
               {paymentSuccess && (
