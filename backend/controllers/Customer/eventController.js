@@ -109,16 +109,19 @@ const getSellerbyEventId = async (req, res) => {
 
 
 const deleteOrder = async (req, res) => {
-    const orderId = req.body.orderId;
-    try{
-      const order = Order.findById(orderId);
-      if(!order){
-        res.status(404).send({message: "Order not found!"});
-      }
-      order.delete();
-    }catch(err){
-      res.status(500).send({message: err.message});
+  const orderId = req.params.id;
+  console.log("From Order:", orderId);
+  try {
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
     }
+
+    return res.status(200).json({ message: 'Order deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 }
 
 const initiatePayment = async (req, res) => {
