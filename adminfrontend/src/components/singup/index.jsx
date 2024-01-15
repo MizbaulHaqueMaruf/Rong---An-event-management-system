@@ -37,19 +37,19 @@ const Signup = () => {
   return (
     <div>
       
-      <div>
+      <div style={{backgroundColor:'#2b333a'}}>
         <form
           onSubmit={handleSubmit}
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "60vh",
+            height: "100vh",
           }}
         >
           <div
             style={{
-              background: "#1c356f",
+              background: "rgb(7 19 47)",
               width: "640px",
               padding: "20px",
               border: "1px solid #ccc",

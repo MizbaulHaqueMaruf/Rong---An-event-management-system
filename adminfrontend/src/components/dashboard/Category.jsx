@@ -50,7 +50,7 @@ function Category() {
                 <Header />
                 <Sidebar />
                 <div className="main-content">
-                    <h1>All Categories</h1>
+                    <h1>Create Category</h1>
                     <form onSubmit={handleCategorySubmit}>
                         <label style={{marginTop:'30px'}}>
                             Category Name: 
@@ -71,7 +71,7 @@ function Category() {
                         <button type="submit">Add Category</button>
                     </form>
 
-                    <h2>Categories</h2>
+                    <h2 style={{color:'white'}}>All Categories</h2>
                     <ul className="category-list">
                         {categories.map((category) => (
                             <li key={category._id} className="category-card">
