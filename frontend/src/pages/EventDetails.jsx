@@ -10,7 +10,7 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Review from "../components/Review";
 import { UserContext } from "../context/UserContext";
-const EventDetails = () => {
+const EventDetails = (key, event) => {
   const { isLoggedIn, userId } = useContext(UserContext);
   const [activeTab, setActiveTab] = useState("home");
   const [eventData, setEventData] = useState(null);
@@ -20,8 +20,6 @@ const EventDetails = () => {
   const [paymentFailure, setPaymentFailure] = useState(false);
   const [numTickets, setNumTickets] = useState(0);
   const navigate = useNavigate();
-  const latitude = eventData.latitude || 23.94;
-  const longitude = eventData.longitude || 90.38;
   
   const handlePayNow = async ()=>{
     const stripe  = await loadStripe("pk_test_51OWhCHHyOH1NkwnJ12v0lb1QHyopFCGdPU718AURyJ1puglQG8QeKfdJ8oVU67QVeNpNUhksv9a3TklM1TwQHRlG00xO0JxwVv")
@@ -115,15 +113,22 @@ const EventDetails = () => {
   };
   useEffect(() => {
     console.log("Fetching event details for ID:", id);
-
+  
     fetch(`http://localhost:5000/eventAPI/Customer/events/${id}`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Received data:", data);
+        console.log("Latitude type:",  data.latitude);
+        console.log("Longitude type:",  data.longitude);
         setEventData(data);
       })
       .catch((error) => console.error("Error fetching event details:", error));
   }, [id]);
+  
+  useEffect(() =>{
+      console.log(key);
+      console.log(event);
+  });
   return (
     <div>
       <Navbar />
@@ -138,15 +143,14 @@ const EventDetails = () => {
           className="w-full h-32 md:h-48 object-cover rounded-t-lg"
         />
       </div>
-
       <div className="mt-6">
         <div className="flex space-x-4">
           <button
             className={`${
               activeTab === "home"
-                ? "bg-transparent text-blue-500 hover:bg-blue-100"
-                : "bg-transparent text-gray-500 hover:bg-gray-100"
-            } py-2 px-4 rounded`}
+                ? "text-black font-bold text-base underline"
+                : "text-gray-500 hover:text-black font-bold"
+            } py-2 px-4 `}
             onClick={() => setActiveTab("home")}
           >
             Home
@@ -154,9 +158,9 @@ const EventDetails = () => {
           <button
             className={`${
               activeTab === "organizer"
-                ? "bg-transparent text-blue-500 hover:bg-blue-100"
-                : "bg-transparent text-gray-500 hover:bg-gray-100"
-            } py-2 px-4 rounded`}
+              ? "text-black font-bold text-base underline"
+              : "text-gray-500 hover:text-black font-bold"
+          } py-2 px-4 `}
             onClick={() => setActiveTab("organizer")}
           >
             Organizer Info
@@ -164,9 +168,9 @@ const EventDetails = () => {
           <button
             className={`${
               activeTab === "Place Order"
-                ? "bg-transparent text-blue-500 hover:bg-blue-100"
-                : "bg-transparent text-gray-500 hover:bg-gray-100"
-            } py-2 px-4 rounded`}
+              ? "text-black font-bold text-base underline"
+              : "text-gray-500 hover:text-black font-bold"
+          } py-2 px-4 `}
             onClick={() => setActiveTab("Place Order")}
           >
             Place Order
@@ -174,54 +178,52 @@ const EventDetails = () => {
           <button
             className={`${
               activeTab === "reviews"
-                ? "bg-transparent text-blue-500 hover:bg-blue-100"
-                : "bg-transparent text-gray-500 hover:bg-gray-100"
-            } py-2 px-4 rounded`}
+              ? "text-black font-bold text-base underline"
+                : "text-gray-500 hover:text-black font-bold"
+            } py-2 px-4 `}
             onClick={() => setActiveTab("reviews")}
           >
             Reviews
           </button>
-          <hr></hr>
         </div>
-       {activeTab === "home" && (
+        <hr className="my-2 border-t border-gray-300" />
+        {activeTab === "home" && (
   <div className="mt-16 flex space-x-4">
-    <div className="w-1/4 ml-10 mr-20">
-      <div className="bg-white p-4 rounded shadow">
-        <div className="text-2xl text-center font-bold text-black mb-4 rounded shadow-2xl">
-          Time
+    <div className="w-1/3">
+      <div className="bg-white p-4 rounded shadow text-center">
+        <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
+          About This Event
         </div>
-        <div className="text-center">12:00 PM - 3:00 PM</div>
+        <div className="max-h-60 overflow-y-auto">
+          {eventData?.description || "Description"}
+        </div>
       </div>
-      <div className="bg-white p-4 text-center">
-      </div>
+    </div>
+    <div className="w-1/5">
+      
+  
+    </div>
+    <div className="w-1/3 ">
       <div className="bg-white p-4 rounded shadow">
         <div className="text-2xl text-center font-bold text-black mb-4 shadow-2xl">
           Location
         </div>
         <div>
           {/* Add the map here */}
-          <MapContainer
-            center={[latitude, longitude]}
-            zoom={13}
-            style={{ height: "200px", width: "100%" }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={[latitude, longitude]}>
-              <Popup>Location</Popup>
-            </Marker>
-          </MapContainer>
-        </div>
-      </div>
-    </div>
-    <div className="w-3/4 ml-100">
-      <div className="bg-white p-4 rounded shadow text-center w-3/4 ml-100">
-        <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
-         About This Event 
-        </div>
-        <div className="max-h-60 overflow-y-auto">
-          {eventData?.description || "Description"} 
+          {eventData && (
+            <MapContainer
+              center={[eventData?.latitude || 0.0, eventData?.longitude || 0.0]}
+              zoom={13}
+              style={{ height: "200px", width: "100%" }}
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              {eventData && (
+                <Marker position={[eventData?.latitude || 0.0, eventData?.longitude || 0.0]}>
+                  <Popup>Location</Popup>
+                </Marker>
+              )}
+            </MapContainer>
+          )}
         </div>
       </div>
     </div>
@@ -235,39 +237,44 @@ const EventDetails = () => {
           </div>
         )}
         {activeTab === "Place Order" && (
-          <div className="mt-6 flex justify-center">
-            <div className="bg-blue-100 p-8 rounded-lg shadow-lg text-center">
-              <div className="text-xl font-semibold">
-                Price for Each Seat: {eventData?.price || 100}
-              </div>
+        <div className="mt-6 flex justify-center">
+        <div className="bg-green-200 p-6 rounded-lg shadow-lg text-center text-black">
+          <div className="text-xl font-semibold">
+            Price for Each Seat: {eventData?.price || 100}
+          </div>
               <div className="mt-4">
               <form className="my-4">
-          <label htmlFor="numTickets" className="text-base text-gray-600">
-            Number of Tickets:
-          </label>
-          <input
-            type="number"
+          <label className="text-base text-gray-700 font-semibold text-pretty">Number of Tickets:</label>
+          <select
             id="numTickets"
             name="numTickets"
-            min="0"
             value={numTickets}
             onChange={handleNumTicketsChange}
             className="border rounded-md p-2 mx-2"
-          />
-          <div className="text-base text-gray-600 my-2">Total Amount: {totalPrice}</div>
+          >
+            {[1, 2, 3, 4, 5].map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <p></p>
+          <p></p>
+          <div className="text-base text-pretty text-black font-bold my-2 mb-5">Total Amount: {totalPrice}</div>
+    
           <button
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-emerald-500 text-black font-bold py-2 px-4 rounded hover:bg-green-950"
             onClick={handlePlaceOrder}
             disabled={isDisabled}
           >
             Place Order
           </button>
         </form>
-        <p className="text-base text-gray-600 my-2">Payment Instructions:</p>
-        <p className="text-sm text-gray-500">
+        <p className="text-lg font-bold text-black text-pretty text-wrap my-2">Payment Instructions:</p>
+        <p className="text-sm text-black text-pretty text-wrap font-bold">
           You will be redirected to Stripe for payment 
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-700 font-bold text-wrap">
          Use Visa Card or Credit Card to purchase. Have valid credit card number 
         </p>
               </div>
@@ -287,13 +294,13 @@ const EventDetails = () => {
                       </div>
                       <div className="text-center mt-4">
                         <button
-                          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
+                          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-black focus:outline-none ml-4"
                           onClick={handlePayNow}
                         >
                           Go to Payment
                         </button>
                         <button
-                          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
+                          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-black focus:outline-none"
                           onClick={() => setPaymentSuccess(false)}
                         >
                           Close

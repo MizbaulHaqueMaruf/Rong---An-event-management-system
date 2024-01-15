@@ -1,143 +1,172 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import axios from "axios"
-import { useContext, useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import Footer from "../components/Footer"
-import Navbar from "../components/Navbar"
-import ProfileOrders from "../components/ProfileOrders"
-import { UserContext } from "../context/UserContext"
-import { URL } from "../url"
-
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import ProfileOrders from "../components/ProfileOrders";
+import UpdateForm from "../components/UpdateForm";
+import { UserContext } from "../context/UserContext";
+import { URL } from "../url";
 
 const Profile = () => {
-  const param=useParams().id
-  const [firstName,setfirstName]=useState("")
-  const [lastName,setlastName]=useState("")
-  const [email,setEmail]=useState("")
-  const [password,setPassword]=useState("")
-  const {user,setUser}=useContext(UserContext)
-  const navigate=useNavigate()
-  const [orders,setOrders]=useState([])
-  const [updated,setUpdated]=useState(false)
+  const param = useParams().id;
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+  const [updated, setUpdated] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isUpdateFormVisible, setIsUpdateFormVisible] = useState(false);
   const itemsPerPage = 7;
   const totalPages = Math.ceil(orders.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentOrders = orders.slice(indexOfFirstItem, indexOfLastItem);
+
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  // console.log(user)
 
-  const fetchProfile=async ()=>{
-    try{
-     const res=await axios.get(URL+"/userAPI/Customer/"+user._id)
-     setfirstName(res.data.firstName)
-     setlastName(res.data.lastName)
-     setEmail(res.data.email)
-     console.log(user);
-     //setPassword(res.data.password)
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get(URL + "/userAPI/Customer/" + user._id);
+      setFirstName(res.data.firstName);
+      setLastName(res.data.lastName);
+      setEmail(res.data.email);
+      //setPassword(res.data.password)
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-     console.log(err)
-    }
-  }
+  };
 
-  const handleUserUpdate=async ()=>{
-    setUpdated(false)
-    try{
-      const res=await axios.put(URL+"/userAPI/Customer/"+user._id,{firstName, lastName,email,password},{withCredentials:true})
-      console.log(res.data)
-      setUpdated(true)
+  const handleUserUpdate = async (updatedFirstName, updatedLastName, updatedPassword) => {
+    setUpdated(false);
+    try {
+      console.log(updatedFirstName, updatedLastName, email);
+      const res = await axios.put(
+        URL + `/userAPI/Customer/${user._id}`,
+        { firstName: updatedFirstName, lastName: updatedLastName, email, password: updatedPassword },
+        { withCredentials: true }
+      );
+      console.log(res.data);
+      setUpdated(true);
+    } catch (err) {
+      console.log(err);
+      setUpdated(false);
     }
-    catch(err){
-      console.log(err)
-      setUpdated(false)
-    }
-  }
+  };
 
-  const handleUserDelete=async()=>{
-    try{
-      const res=await axios.delete(URL+"/userAPI/Customer/"+user._id,{withCredentials:true})
+  const handleUserDelete = async () => {
+    try {
+      const res = await axios.delete(
+        URL + "/userAPI/Customer/" + user._id,
+        { withCredentials: true }
+      );
       console.log(res);
-      setUser(null)
-      navigate("/")
+      setUser(null);
+      navigate("/");
       // console.log(res.data)
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-   }
-  }
-// console.log(user)
-  const fetchUserOrders=async ()=>{
-    try{
-      const res=await axios.get("http://localhost:5000/userAPI/Customer/getOrders/"+user._id)
-      console.log(res.data)
-      setOrders(res.data)
-    }
-    catch(err){
-      console.log(err)
-    }
-  }
+  };
 
-  useEffect(()=>{
-    fetchProfile()
-  },[param])
+  const fetchUserOrders = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/userAPI/Customer/getOrders/" + user._id
+      );
+      console.log(res.data);
+      setOrders(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  useEffect(()=>{
-    fetchUserOrders()
-  },[param])
+  useEffect(() => {
+    fetchProfile();
+  }, [param]);
+
+  useEffect(() => {
+    fetchUserOrders();
+  }, [param]);
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="min-h-[80vh] px-8 md:px-[200px] mt-8 flex md:flex-row flex-col-reverse md:items-start items-start">
         <div className="flex flex-col md:w-[70%] w-full mt-8 md:mt-0">
-        <h1 className="text-xl font-bold mb-4">Due Orders:</h1>
-         {currentOrders.length === 0 ? (
+          <h1 className="text-xl font-bold mb-4">Due Orders:</h1>
+          {currentOrders.length === 0 ? (
             <p className="text-2xl font-bold text-times-new-roman">
-               You do not have any Unpaid Orders
+              You do not have any Unpaid Orders
             </p>
-          ):(<>
-         {currentOrders.map((order) => (
-          <ProfileOrders key={order._id} order={order} />
-        ))}
-        <div className="flex justify-center mt-4">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => paginate(i + 1)}
-              className={`mx-1 px-3 py-1 bg-gray-200 hover:bg-gray-300 ${
-                currentPage === i + 1 && 'bg-gray-400'
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
-        </>
-        )}
+          ) : (
+            <>
+              {currentOrders.map((order) => (
+                <ProfileOrders key={order._id} order={order} />
+              ))}
+              <div className="flex justify-center mt-4">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => paginate(i + 1)}
+                    className={`mx-1 px-3 py-1 bg-gray-200 hover:bg-gray-300 ${
+                      currentPage === i + 1 && "bg-gray-400"
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
         <div className="md:sticky md:top-12  flex justify-start md:justify-end items-start md:w-[30%] w-full md:items-end ">
-        <div className=" flex flex-col space-y-4 items-start">
-        <h1 className="text-xl font-bold mb-4">Profile</h1>
-          <input onChange={(e)=>setfirstName(e.target.value)} value={firstName} className="outline-none px-4 py-2 text-gray-500" placeholder="Your firstName" type="text"/>
-          <input onChange={(e)=>setlastName(e.target.value)} value={lastName} className="outline-none px-4 py-2 text-gray-500" placeholder="Your lastName" type="text"/>
-          <input onChange={(e)=>setEmail(e.target.value)} value={email} className="outline-none px-4 py-2 text-gray-500" placeholder="Your email" type="email"/>
-           <input onChange={(e)=>setPassword(e.target.value)} value={password} className="outline-none px-4 py-2 text-gray-500" placeholder="Your password" type="password"/>
-          <div className="flex items-center space-x-4 mt-8">
-            <button onClick={handleUserUpdate} className="text-white font-semibold bg-black px-4 py-2 hover:text-black hover:bg-gray-400">Update</button>
-            <button onClick={handleUserDelete} className="text-white font-semibold bg-black px-4 py-2 hover:text-black hover:bg-gray-400">Delete</button>
+          <div className=" flex flex-col space-y-4 items-start bg-zinc-100 p-6 rounded">
+            <h1 className="text-xl font-bold mb-6">Profile</h1>
+            <p className="text-base font-times-new-roman text-black mb-4 font-bold position-relative">
+            {firstName} {lastName} 
+            </p>
+            <p className="text-base font-times-new-roman text-black mb-2 font-bold position-relative">
+             {email}
+            </p>
+            <p> </p>
+            <div className="flex items-center space-x-4 mt-8">
+              <button
+                onClick={() => setIsUpdateFormVisible(true)}
+                className="text-white text-sm font-semibold bg-black px-2 py-1 hover:text-black hover:bg-gray-400 rounded"
+              >
+                Update
+              </button>
+              <button
+                onClick={handleUserDelete}
+                className="text-white text-sm font-semibold bg-black px-2 py-1 hover:text-black hover:bg-gray-400 rounded"
+              >
+                Delete
+              </button>
+            </div>
+            {updated && (
+              <h3 className="text-green-500 text-sm text-center mt-4">
+                User updated successfully!
+              </h3>
+            )}
           </div>
-          {updated && <h3 className="text-green-500 text-sm text-center mt-4">user updated successfully!</h3>}
         </div>
-          
-        </div>
+        {isUpdateFormVisible && (
+          <UpdateForm
+            handleClose={() => setIsUpdateFormVisible(false)}
+            handleConfirmUpdate={handleUserUpdate}
+            // Pass other necessary props to the UpdateForm component
+          />
+        )}
       </div>
-      <Footer/>
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
