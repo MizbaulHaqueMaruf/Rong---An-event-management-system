@@ -1,13 +1,15 @@
 const events = require("../../models/eventModel");
 const sellers = require("../../models/sellerModel");
 const Order = require("../../models/Order");
+const rongWallet = require("../../models/rongWallet");
+const sellerWallet = require("../../models/sellerWallet");
 const { Cursor } = require("mongoose");
-const axios = require("axios");
+const {uuid} = require("uuid");
 require("dotenv").config();
 const stripe = require("stripe")("sk_test_51OWhCHHyOH1NkwnJnqpUHUTeQ5dAptRdHOYOBNZa7SQgoPPJ8dYc6ODfAXKGe8FG4OWWG5zLkfgDm4UbRlream2d00serB8OL2");
 const getEvents = async (req, res) => {
   try {
-    const all_events = await events.find();
+    const all_events = await events.find().sort({createdAt: -1});
     res.json(all_events);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -69,7 +71,7 @@ const createOrder = async (req, res) =>{
 
     await newOrder.save(); // Save the new order
 
-    res.status(201).json({ message: 'Order created successfully' });
+    res.status(201).json(newOrder);
   } catch (error) {
     console.error('Error creating order:', error);
     res.status(500).json({ message: 'Failed to create order' });
@@ -77,7 +79,7 @@ const createOrder = async (req, res) =>{
 }
 
 function generateRandomId() {
-  return Math.random().toString(36).substr(2, 9); // Random alphanumeric ID
+  return Math.random().toString(36).substr(2, 11); // Random alphanumeric ID
 }
 const getSellerbyEventId = async (req, res) => {
   const eventId = req.params.id;
@@ -107,23 +109,28 @@ const getSellerbyEventId = async (req, res) => {
 
 
 const deleteOrder = async (req, res) => {
-    const orderId = req.body.orderId;
-    try{
-      const order = Order.findById(orderId);
-      if(!order){
-        res.status(404).send({message: "Order not found!"});
-      }
-      order.delete();
-    }catch(err){
-      res.status(500).send({message: err.message});
+  const orderId = req.params.id;
+  console.log("From Order:", orderId);
+  try {
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
     }
+
+    return res.status(200).json({ message: 'Order deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 }
 
 const initiatePayment = async (req, res) => {
 
   try{
-  const {eventTitle, unitPrice,platformCharge,numberOfTickets,totalAmount,eventId, sellerId } = req.body;
+  const {eventTitle, unitPrice, orderId, platformCharge,numberOfTickets,totalAmount,eventId, sellerId, customerId} = req.body;
   console.log(req.body);
+  const transactionId = generateRandomId();
+  console.log(transactionId);
   const line_items = [
     {
       price_data: {
@@ -131,7 +138,7 @@ const initiatePayment = async (req, res) => {
         product_data: {
           name: eventTitle,
         },
-        unit_amount: unitPrice*1000,
+        unit_amount: unitPrice*100,
       },
       quantity: numberOfTickets,
     },
@@ -141,22 +148,47 @@ const initiatePayment = async (req, res) => {
         product_data: {
           name: "Platform Charge",
         },
-        unit_amount: platformCharge*10000,
+        unit_amount: platformCharge*100,
       },
       quantity: 1,
     },
   ];
   const session = await stripe.checkout.sessions.create({
     payment_method_types:["card"],
-    line_items:line_items,
-    mode:"payment",
-    success_url:"http://localhost:5173/payment/success",
+    line_items:line_items, 
+    mode:"payment", 
+    success_url:`http://localhost:5173/payment/success/${transactionId}`,
     cancel_url:"http://localhost:5173/payment/cancel",
   });
-  res.json({id:session.id, message: "Hello!"});
+  const newRongWallet = new rongWallet({
+    sellerId,
+    customerId,
+    transactionId,
+    eventId, 
+    totalAmount,
+    platformCharge,
+    numberOfTickets
+  });
+  await newRongWallet.save();
+  await Order.updateOne(
+    { _id: orderId }, 
+    { $set: { isPaid: true } } 
+  );
+  const newWallet = new sellerWallet({
+    sellerId,
+    customerId,
+    transactionId,
+    eventId,
+    amount: unitPrice*numberOfTickets,
+    numberOfTickets
+});
+await newWallet.save();
+  res.json({id:session.id, lineItems:line_items});
   }catch(error){
     res.status(500).json({error:error});
   }
+  
 }
+
 
 module.exports = {getEvents, searchEvents, getEventbyID, createOrder , getSellerbyEventId,initiatePayment, deleteOrder};

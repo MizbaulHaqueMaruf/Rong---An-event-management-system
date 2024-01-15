@@ -3,21 +3,27 @@ const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 
 //REGISTER
-const CustomerRegister = async(req,res)=>{
-    try{
-        const {firstName,lastName,email,password}=req.body
-        const salt=await bcrypt.genSalt(10)
-        const hashedPassword=await bcrypt.hashSync(password,salt)
-        const newUser=new User({firstName,lastName,email,password:hashedPassword})
-        const savedUser=await newUser.save()
-        res.status(200).json(savedUser)
-
+const CustomerRegister = async (req, res) => {
+    try {
+        const { firstName, lastName, email, password } = req.body;
+        console.log(req.body);
+        const salt = await bcrypt.genSalt(10);
+        const user = await User.findOne({ email: email });
+        if (user) {
+            console.log(user);
+            return res.status(400).send({ message: "User already exists" });
+        }
+        const hashedPassword = await bcrypt.hashSync(password, salt);
+        const newUser = new User({ firstName, lastName, email, password: hashedPassword });
+        console.log(newUser);
+        const savedUser = await newUser.save();
+        return res.status(200).json(savedUser);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json(err);
     }
-    catch(err){
-        res.status(500).json(err)
-    }
+};
 
-}
 
 
 //LOGIN

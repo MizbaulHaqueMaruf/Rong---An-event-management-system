@@ -13,8 +13,8 @@ router.get("/Customer/events/:id", getEventbyID);
 router.post("/Customer/events/orderEvent", createOrder);
 ///Get seller
 router.get("/Customer/events/seller/:id", getSellerbyEventId);
-///delete order
-router.delete("/Customer/events/deleteOrder", deleteOrder);
 ///POST payment
 router.post("/Customer/events/create-checkout-session",initiatePayment);
+///delete order
+router.delete("/Customer/events/deleteOrder/:id", deleteOrder);
 module.exports=router

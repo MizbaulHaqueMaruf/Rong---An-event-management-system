@@ -18,7 +18,7 @@ const Register = () => {
     
     try{
 
-      const res=await axios.post(URL+"/customerApi/Customer/register",{firstName,lastName,email,password})
+      const res=await axios.post(URL+"/customerAPI/Customer/register",{firstName,lastName,email,password})
       setfirstName(res.data.firstName)
       setlastName(res.data.lastName)
       setEmail(res.data.email)
