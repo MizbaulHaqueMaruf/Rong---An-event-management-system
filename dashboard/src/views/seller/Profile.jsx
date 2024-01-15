@@ -116,7 +116,7 @@ const Profile = () => {
                   <span>{userInfo.status}</span>
                 </div>
                 <div className="flex gap-2">
-                  <span>Payment Account : </span>
+                  {/* <span>Payment Account : </span> */}
                   {/* <p>
                                         {
                                             userInfo.payment === 'active' ? <span className='bg-red-500 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded '>{userInfo.payment}</span> : <span onClick={() => dispatch(create_stripe_connect_account())} className='bg-blue-500 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded '>
