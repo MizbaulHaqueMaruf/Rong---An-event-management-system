@@ -6,7 +6,7 @@ import
 function Header({OpenSidebar}) {
   return (
     <header className='headerr'>
-        <div className='menu-icon'>
+        {/* <div className='menu-icon'>
             <BsJustify className='icon' onClick={OpenSidebar}/>
         </div>
         <div className='headerr-left'>
@@ -16,7 +16,7 @@ function Header({OpenSidebar}) {
             <BsFillBellFill className='icon'/>
             <BsFillEnvelopeFill className='icon'/>
             <BsPersonCircle className='icon'/>
-        </div>
+        </div> */}
     </header>
   )
 }

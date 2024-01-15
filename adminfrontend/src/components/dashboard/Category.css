@@ -1,7 +1,7 @@
 /* Category.css */
 
 .cover {
-    padding: 20px;
+    /* padding: 20px; */
 }
 
 .grid-container {
@@ -35,7 +35,7 @@ input {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
-    color:white;
+    /* color:white; */
 }
 
 button {

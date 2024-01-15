@@ -3,7 +3,7 @@ import
 {BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, 
   BsListCheck,BsBoxArrowRight, BsMenuButtonWideFill, BsFillGearFill, BsFillFolderFill}
  from 'react-icons/bs'
-
+ import logo from '../dashboard/img/logo.png';
 function Sidebar({openSidebarToggle, OpenSidebar}) {
 
     const handleLogout = () => {
@@ -13,11 +13,17 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
 
   return (
     <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive": ""}>
-        <div className='sidebar-title'>
+        {/* <div className='sidebar-title'>
             <div className='sidebar-brand'>
                 <u style={{color:'#9e9ea4'}}>RONG-Admin Panel</u>
             </div>
             <span className='icon close_icon' onClick={OpenSidebar}>X</span>
+        </div> */}
+        <div className='sidebar-title'>
+            <div className='sidebar-brand'>
+                <img src={logo} alt="Logo"  />
+            </div>
+            {/* <span className='icon close_icon' onClick={OpenSidebar}></span> */}
         </div>
 
         <ul className='sidebar-list'>

@@ -76,14 +76,19 @@ body {
     margin-bottom: 30px;
   }
   
-  .sidebar-title > span {
-    display: none;
-  }
+ 
   
   .sidebar-brand {
     margin-top: 15px;
     font-size: 20px;
+    width: 200px;
+
     font-weight: 700;
+  }
+
+  .sidebar-brand img {
+    height: 100%;
+    width: 100%;
   }
   
   .sidebar-list {
