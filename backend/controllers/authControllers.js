@@ -43,7 +43,7 @@ class authControllers {
           name,
           email,
           password: await bcrpty.hash(password, 10),
-          status: "active",
+          status: "inactive",
           method: "manually",
           organization: {},
         });
