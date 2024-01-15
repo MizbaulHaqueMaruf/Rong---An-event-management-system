@@ -66,11 +66,11 @@ const createOrder = async (req, res) =>{
       UserId,
       isPaid,
       totalAmount,
-      numberOfTickets
+      numberOfSeats:numberOfTickets,
     });
 
     await newOrder.save(); // Save the new order
-
+    console.log(newOrder);
     res.status(201).json(newOrder);
   } catch (error) {
     console.error('Error creating order:', error);

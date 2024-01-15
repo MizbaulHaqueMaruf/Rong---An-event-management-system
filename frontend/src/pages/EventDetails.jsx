@@ -20,8 +20,8 @@ const EventDetails = () => {
   const [paymentFailure, setPaymentFailure] = useState(false);
   const [numTickets, setNumTickets] = useState(0);
   const navigate = useNavigate();
-  const latitude = eventData?.latitude || 0;
-  const longitude = eventData?.longitude || 0;
+  const latitude = eventData.latitude || 23.94;
+  const longitude = eventData.longitude || 90.38;
   
   const handlePayNow = async ()=>{
     const stripe  = await loadStripe("pk_test_51OWhCHHyOH1NkwnJ12v0lb1QHyopFCGdPU718AURyJ1puglQG8QeKfdJ8oVU67QVeNpNUhksv9a3TklM1TwQHRlG00xO0JxwVv")
@@ -175,7 +175,7 @@ const EventDetails = () => {
           <hr></hr>
         </div>
        {activeTab === "home" && (
-  <div className="mt-6 flex space-x-4">
+  <div className="mt-16 flex space-x-4">
     <div className="w-1/4 ml-10 mr-20">
       <div className="bg-white p-4 rounded shadow">
         <div className="text-2xl text-center font-bold text-black mb-4 rounded shadow-2xl">
@@ -254,7 +254,7 @@ const EventDetails = () => {
         </form>
         <p className="text-base text-gray-600 my-2">Payment Instructions:</p>
         <p className="text-sm text-gray-500">
-          You will be redirected to Strip for payment 
+          You will be redirected to Stripe for payment 
         </p>
         <p className="text-sm text-gray-500">
          Use Visa Card or Credit Card to purchase. Have valid credit card number 
