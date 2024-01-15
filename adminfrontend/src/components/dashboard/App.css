@@ -239,6 +239,7 @@ body {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 20px;
   margin: 15px 0;
+  height: 300px
 }
 
 /* Styles for the organization cards in OrganizationList */

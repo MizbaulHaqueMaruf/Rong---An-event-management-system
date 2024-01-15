@@ -16,7 +16,7 @@
   }
   
   .approved-organizations-list {
-    list-style: none; /* Remove default list bullets */
+     display: grid; /* Remove default list bullets */
     padding: 0; /* Remove default list padding */
   }
   
