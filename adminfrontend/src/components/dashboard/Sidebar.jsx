@@ -26,22 +26,22 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
                     <BsGrid1X2Fill className='icon'/> Dashboard
                 </a>
             </li>
-            <li className='sidebar-list-item'>
+            {/* <li className='sidebar-list-item'>
                 <a href="/organization-list">
                     <BsFillArchiveFill className='icon'/> Organizations
                     
                 </a>
-            </li>
+            </li> */}
             <li className='sidebar-list-item'>
                 <a href="/organizer-approval">
                     <BsPeopleFill className='icon'/> Organizer Approval
                 </a>
             </li>
-             <li className='sidebar-list-item'>
+             {/* <li className='sidebar-list-item'>
                 <a href="/event-request">
                     <BsFillGrid3X3GapFill className='icon'/> Event Requests
                 </a>
-            </li> 
+            </li>  */}
             
             {/* <li className='sidebar-list-item'>
                 <a href="">
