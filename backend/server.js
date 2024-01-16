@@ -152,7 +152,7 @@ app.use("/api/admins", adminRoutes);
 app.use("/api/data", dataRoutes);
 app.use("/api", require("./routes/dashboard/categoryRoutes"));
 app.use("/api", require("./routes/dashboard/productRoutes"));
-app.get("/", (req, res) => res.send("Hello World!"));
+// app.get("/", (req, res) => res.send("Hello World!"));
 const port = process.env.PORT;
 dbConnect();
 server.listen(port, () => console.log(`Server is running on port ${port}!`));
