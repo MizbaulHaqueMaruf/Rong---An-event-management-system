@@ -25,7 +25,7 @@ const Navbar = () => {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="bg-black flex items-center justify-between px-5 md:px-[40px] py-5">
+    <div className="bg-black flex items-center justify-between px-5 md:px-[30px] py-5">
       <Link to="/" className="flex items-center">
         <img src={Ronglogo} alt="Rong Logo" className="h-8 cursor-pointer" />
       </Link>
@@ -36,7 +36,7 @@ const Navbar = () => {
           </p>
           <input
             onChange={(e) => setPrompt(e.target.value)}
-            className="outline-none px-7 text-base text-left h-7"
+            className="outline-none px-10 bg-gray-700 text-base text-left h-7"
             placeholder="Search Events ..."
             type="text"
           />
