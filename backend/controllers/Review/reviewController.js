@@ -15,6 +15,7 @@ const createReview = async(req, res) => {
     try{
         const { userId, comment, stars, eventId}=req.body;
         const user = await User.findById(userId);
+        console.log(req.body);
         if(!user){
             res.status(400).json({ message: "User not found"});
         }
@@ -32,7 +33,7 @@ const createReview = async(req, res) => {
         })
         await newReview.save();
         await events.updateOne(
-            { _id: orderId }, 
+            { _id: eventId }, 
             { $set: { rating: (event.rating + stars)/2 } } 
           );
         res.status(200).json({message: "Review saved successfully"});

@@ -294,13 +294,13 @@ const EventDetails = (key, event) => {
                       </div>
                       <div className="text-center mt-4">
                         <button
-                          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-black focus:outline-none ml-4"
+                          className="bg-gray-700 text-white text-sm py-2 px-4 rounded mr-10 hover:bg-black focus:outline-none ml-4"
                           onClick={handlePayNow}
                         >
                           Go to Payment
                         </button>
                         <button
-                          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-black focus:outline-none"
+                          className="bg-gray-700  text-white text-sm py-2 px-4 rounded hover:bg-black focus:outline-none"
                           onClick={() => setPaymentSuccess(false)}
                         >
                           Close
@@ -327,7 +327,7 @@ const EventDetails = (key, event) => {
                       </div>
                       <div className="text-center mt-4">
                         <button
-                          className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none"
+                          className="bg-red-500 text-white text-sm py-2 px-4 rounded hover:bg-red-600 focus:outline-none"
                           onClick={() => setPaymentFailure(false)}
                         >
                           Close

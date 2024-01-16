@@ -45,7 +45,7 @@ const Review = () => {
       if (response.ok) {
         // Successfully submitted review
         console.log('Review submitted successfully');
-
+        window.location.reload();
         // Update reviews dynamically
         const updatedReviews = [...reviews, { userName: 'You', comment: userComment, stars: userRating }];
         setReviews(updatedReviews);

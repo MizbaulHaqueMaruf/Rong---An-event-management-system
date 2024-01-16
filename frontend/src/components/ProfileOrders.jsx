@@ -2,11 +2,12 @@
 import { loadStripe } from '@stripe/stripe-js';
 import axios from "axios";
 import { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DummyImage from "../assets/Dhaka_folk_fest.jpg";
 import { UserContext } from "../context/UserContext";
 const ProfileOrders = ({ order }) => {
   const { userId } = useContext(UserContext);
+  const navigate = useNavigate();
   const handlePay= async()=>{
     const stripe  = await loadStripe("pk_test_51OWhCHHyOH1NkwnJ12v0lb1QHyopFCGdPU718AURyJ1puglQG8QeKfdJ8oVU67QVeNpNUhksv9a3TklM1TwQHRlG00xO0JxwVv")
     const platformBill = Math.ceil(order?.totalAmount *0.05);
@@ -52,7 +53,7 @@ const ProfileOrders = ({ order }) => {
     try{
       const res=await axios.delete(`http://localhost:5000/eventAPI/Customer/events/deleteOrder/${order?._id}`);
       console.log(res);
-      window.location.reload();
+      navigate("/");
     } catch (error) {
         console.log(error);
     }
