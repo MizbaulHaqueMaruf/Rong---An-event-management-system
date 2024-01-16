@@ -12,7 +12,7 @@ const EventCard = ({ event }) => {
     return eventDate.toLocaleDateString('bn-BD', options);
   };
   return(  
-  <div className="w-full md:w-1/3 lg:w-1/3 p-6 md:p-5">
+  <div className="w-full md:w-1/3 lg:w-2/9 p-4 md:p-2">
     <div className="bg-white rounded-lg shadow-md">
       <img
         src={event.images && event.images.length > 0 ? event.images[0] : DummyImage}
@@ -53,7 +53,7 @@ const HomeFeeds = () => {
   const { key } = useParams();
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const eventsPerPage = 20;
+  const eventsPerPage = 12;
 
   useEffect(() => {
     const url = key

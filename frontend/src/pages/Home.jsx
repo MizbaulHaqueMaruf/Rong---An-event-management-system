@@ -1,12 +1,10 @@
-import { useContext, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import HomeFeeds from "../components/HomeFeeds";
 import Navbar from "../components/Navbar";
-import { UserContext } from "../context/UserContext";
 
 const Home = () => {
-  const { user } = useContext(UserContext);
   const path = useLocation().pathname;
   const referrer = document.referrer;
 
@@ -23,9 +21,7 @@ const Home = () => {
         <div className="text-2xl font-semibold mb-4">
           {path === "/" ? "Top Events" : null}
         </div>
-        <Link to={user ? ` ` : "/login"}>
           <HomeFeeds />
-        </Link>
       </div>
       <Footer />
     </>

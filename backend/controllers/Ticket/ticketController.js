@@ -9,6 +9,12 @@ const PDFDocument = require('pdfkit');
 const uuid = require('uuid');
 const path = require('path');
 
+const formatEventDate = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const eventDate = new Date(dateString);
+  return eventDate.toLocaleDateString('bn-BD', options);
+};
+
 const createPDF = async (req, res) => {
   try {
     const transactionId = req.params.id;
@@ -50,7 +56,7 @@ const createPDF = async (req, res) => {
 
     doc.fontSize(20).text('Event Title', { align: 'center' });
     doc.moveDown().fontSize(16).text(`Ticket for: ${user.firstName} ${user.lastName}`, { bold: true });
-    doc.moveDown().text(`Event Date: ${event.eventDate}`, { font: 'Times-Roman', fontSize: 8 });
+    doc.moveDown().text(`Event Date: ${formatEventDate(event.eventDate)}`, { font: 'Times-Roman', fontSize: 8 });
     doc.moveDown().stroke();
     doc.moveDown().font('Times-Roman').fontSize(8).text(eventDescription);
     doc.moveDown().text(`Sold by: ${sellerName}`, { font: 'Times-Roman', fontSize: 8 });
