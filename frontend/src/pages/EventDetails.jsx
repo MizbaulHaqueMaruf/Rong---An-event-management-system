@@ -224,7 +224,7 @@ const EventDetails = (key, event) => {
     <div className="w-1/3 mr-100">
     <div className="bg-white p-4 rounded shadow text-center ml-4 mr-10 mb-10">
         <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
-          Images
+          Event Images
         </div>
         <img
           src={

@@ -12,7 +12,7 @@ const EventCard = ({ event }) => {
     return eventDate.toLocaleDateString('bn-BD', options);
   };
   return(  
-  <div className="w-full md:w-1/2 lg:w-1/3 p-4 md:p-2 ml-2 mr-4">
+  <div className="w-full md:w-1/2 lg:w-1/3 p-4 md:p-2">
     <div className="bg-white rounded-lg shadow-md">
       <img
         src={event.images && event.images.length > 0 ? event.images[0] : DummyImage}
