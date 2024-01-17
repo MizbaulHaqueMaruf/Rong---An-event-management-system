@@ -77,6 +77,10 @@ const EventDetails = (key, event) => {
         navigate("/login");
         return;
       }
+      if(numTickets> eventData.stock){
+        setPaymentFailure(true);
+        return;
+      }
       // Make a POST request to the backend to create an order
       const response = await fetch(
         "http://localhost:5000/eventAPI/Customer/events/orderEvent",
@@ -102,6 +106,7 @@ const EventDetails = (key, event) => {
         const newOrder = await response.json();
         setOrder(newOrder);
         console.log(order);
+        eventData.stock = eventData.stock - numTickets;
         setPaymentSuccess(true); // Show success pop-up
       } else {
         setPaymentFailure(true); // Show failure pop-up

@@ -59,6 +59,14 @@ const createOrder = async (req, res) =>{
     const ticketId = generateRandomId(); // Function to generate a random ticket ID
     const eventDate = new Date().toISOString().split('T')[0]; // Get current date
     console.log(req.body);
+    const event = await events.findById(eventId);
+    if(!event){
+      res.status(404).send({message: 'No such event exist'});
+    }
+    await events.updateOne(
+      { _id: eventId }, 
+      { $set: { stock: event.stock - numberOfTickets } } 
+    );
     // Create the order in the database
     const newOrder = new Order({
       eventId,
