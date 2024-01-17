@@ -57,6 +57,7 @@ const createPDF = async (req, res) => {
     doc.moveDown().fontSize(14).text(`Ticket for: ${user.firstName} ${user.lastName}`, { bold: true });
     doc.moveDown().fontSize(12).text("--------------------------------------------------------------------------------------");
     doc.moveDown().text(`Event Date: ${formatEventDate(new Date())}`, { font: 'Times-Roman', fontSize: 8, bold: true });
+    doc.moveDown().font('Times-Roman').fontSize(12).text(`Transaction Id: ${transactionId}`,{bold: true});
     doc.moveDown().font('Times-Roman').fontSize(12).text(`Organized By: @${event.orgName}`,{bold: true});
     doc.moveDown().fontSize(12).text(`Sold by: ${sellerName}`, { font: 'Times-Roman' , bold: true });
     doc.moveDown().fontSize(12).text(`Seller Email: ${sellerEmail}`, { font: 'Times-Roman',  bold: true });

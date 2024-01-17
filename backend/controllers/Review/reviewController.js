@@ -2,9 +2,9 @@ const Review =  require("../../models/reviewModel");
 const User = require("../../models/User");
 const events = require("../../models/eventModel");
 const getReviewsByEventId = async (req, res)=>{
-    const eventId = req.params.eventId;
+    const eventId = req.params.id;
     try {
-        const all_reviews = await Review.find({eventID:eventId});
+        const all_reviews = await Review.find({eventId:eventId});
         res.json(all_reviews);
       } catch (error) {
         res.status(500).json({ error: error.message });
