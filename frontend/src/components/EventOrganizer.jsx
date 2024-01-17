@@ -20,17 +20,12 @@ const EventOrganizer = ( event ) => {
             Seller Email: {sellerData?.email}
           </a>
         </p>
-        <p className="text-gray-600">Seller Organization: {sellerData?.organization?.name}</p>
-        <p className="text-gray-600">Organization Description: {sellerData?.organization?.description}</p>
+        <p className="text-gray-600 font-bold">Organized by: {sellerData?.organization?.orgName}</p>
         <p className="text-gray-600">
-          <a href={`mailto:${sellerData?.organization?.email}`} className="underline hover:text-blue-500">
-            Organization Email: {sellerData?.organization?.email}
-          </a>
+        {sellerData?.organization?.sub_district}, 
         </p>
         <p className="text-gray-600">
-          <a href={sellerData?.organization?.website} target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-500">
-            Organization Website: {sellerData?.organization?.website}
-          </a>
+            {sellerData?.organization?.district}, {sellerData?.organization?.division}
         </p>
       </div>
     </div>
