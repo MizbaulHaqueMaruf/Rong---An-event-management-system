@@ -36,7 +36,7 @@ const Navbar = () => {
           </p>
           <input
             onChange={(e) => setPrompt(e.target.value)}
-            className="outline-none px-10 bg-gray-700 text-base text-left h-7"
+            className="outline-none px-6 bg-gray-700 text-stone-50 text-left h-7 rounded"
             placeholder="Search Events ..."
             type="text"
           />
