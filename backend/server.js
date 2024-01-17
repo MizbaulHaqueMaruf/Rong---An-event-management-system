@@ -15,6 +15,7 @@ const server = http.createServer(app);
 app.use(
   cors({
     origin: [
+      "https://rong-mjdy.onrender.com/",
       "http://localhost:3000",
       "http://localhost:3001",
       "http://localhost:5173",
