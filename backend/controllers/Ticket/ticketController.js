@@ -12,7 +12,7 @@ const path = require('path');
 const formatEventDate = (dateString) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   const eventDate = new Date(dateString);
-  return eventDate.toLocaleDateString('bn-BD', options);
+  return eventDate.toLocaleDateString('en-EN', options);
 };
 
 const createPDF = async (req, res) => {
@@ -50,20 +50,18 @@ const createPDF = async (req, res) => {
     doc.pipe(fs.createWriteStream(filePath));
 
     const numberOfSeats = String(sellerWallet_info.numberOfTickets);
-    const eventDescription = event.description;
     const sellerName = seller.name;
     const sellerEmail = seller.email;
 
-    doc.fontSize(20).text('Event Title', { align: 'center' });
-    doc.moveDown().fontSize(16).text(`Ticket for: ${user.firstName} ${user.lastName}`, { bold: true });
-    doc.moveDown().text(`Event Date: ${formatEventDate(event.eventDate)}`, { font: 'Times-Roman', fontSize: 8 });
-    doc.moveDown().stroke();
-    doc.moveDown().font('Times-Roman').fontSize(8).text(eventDescription);
-    doc.moveDown().text(`Sold by: ${sellerName}`, { font: 'Times-Roman', fontSize: 8 });
-    doc.moveDown().text(`Number of Seats: ${numberOfSeats}`, { font: 'Times-Roman', fontSize: 8 });
-    doc.moveDown().text(`Seller Email: ${sellerEmail}`, { font: 'Times-Roman', fontSize: 8 });
+    doc.fontSize(20).text(`Event Title : ${event.name}`, { align: 'center' });
+    doc.moveDown().fontSize(14).text(`Ticket for: ${user.firstName} ${user.lastName}`, { bold: true });
+    doc.moveDown().fontSize(12).text("--------------------------------------------------------------------------------------");
+    doc.moveDown().text(`Event Date: ${formatEventDate(new Date())}`, { font: 'Times-Roman', fontSize: 8, bold: true });
+    doc.moveDown().font('Times-Roman').fontSize(12).text(`Organized By: @${event.orgName}`,{bold: true});
+    doc.moveDown().fontSize(12).text(`Sold by: ${sellerName}`, { font: 'Times-Roman' , bold: true });
+    doc.moveDown().fontSize(12).text(`Seller Email: ${sellerEmail}`, { font: 'Times-Roman',  bold: true });
+    doc.moveDown().fontSize(12).text(`Number of Seats: ${numberOfSeats}`, { font: 'Times-Roman', bold: true });
     doc.end();
-
     res.status(200).send({ fileName: filename, userEmail: user.email });
   } catch (error) {
     res.status(500).send({ err: error });

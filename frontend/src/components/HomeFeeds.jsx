@@ -12,7 +12,7 @@ const EventCard = ({ event }) => {
     return eventDate.toLocaleDateString('bn-BD', options);
   };
   return(  
-  <div className="w-full md:w-1/3 lg:w-2/9 p-4 md:p-2">
+  <div className="w-full md:w-1/2 lg:w-1/4 p-4 md:p-2 ml-2 mr-4">
     <div className="bg-white rounded-lg shadow-md">
       <img
         src={event.images && event.images.length > 0 ? event.images[0] : DummyImage}
@@ -50,16 +50,16 @@ EventCard.propTypes = {
 };
 
 const HomeFeeds = () => {
-  const { key } = useParams();
+  const { prompt } = useParams();
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 12;
 
   useEffect(() => {
-    const url = key
-      ? `http://localhost:5000/eventAPI/Customer/searchEvents/${key}`
+    const url = prompt
+      ? `http://localhost:5000/eventAPI/Customer/searchEvents/${prompt}`
       : `http://localhost:5000/eventAPI/Customer/events`;
-
+    console.log(url);
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -67,7 +67,7 @@ const HomeFeeds = () => {
             setEvents(data);
         })
       .catch((error) => console.error("Error fetching events:", error));
-  }, [currentPage, key]);
+  }, [currentPage, prompt]);
   
   const totalPages = Math.ceil(events.length / eventsPerPage);
   const handlePageChange = (pageNumber) => {

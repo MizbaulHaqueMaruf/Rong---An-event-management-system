@@ -189,8 +189,8 @@ const EventDetails = (key, event) => {
         <hr className="my-2 border-t border-gray-300" />
         {activeTab === "home" && (
   <div className="mt-16 flex space-x-4">
-    <div className="w-1/3">
-      <div className="bg-white p-4 rounded shadow text-center">
+    <div className="w-1/3 ml-60">
+      <div className="bg-white p-4 rounded shadow text-center ml-4 mr-10 mb-10">
         <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
           About This Event
         </div>
@@ -198,13 +198,7 @@ const EventDetails = (key, event) => {
           {eventData?.description || "Description"}
         </div>
       </div>
-    </div>
-    <div className="w-1/5">
-      
-  
-    </div>
-    <div className="w-1/3 ">
-      <div className="bg-white p-4 rounded shadow">
+      <div className="bg-white p-4 rounded shadow ml-4 mr-10">
         <div className="text-2xl text-center font-bold text-black mb-4 shadow-2xl">
           Location
         </div>
@@ -225,6 +219,32 @@ const EventDetails = (key, event) => {
             </MapContainer>
           )}
         </div>
+      </div>
+    </div>
+    <div className="w-1/3 mr-100">
+    <div className="bg-white p-4 rounded shadow text-center ml-4 mr-10 mb-10">
+        <div className="text-2xl font-bold text-black mb-4 shadow-2xl">
+          Images
+        </div>
+        <img
+          src={
+            eventData?.images && eventData.images.length > 0
+              ? eventData.images[0]
+              : image1
+          }
+          alt={eventData?.name || "Event Image"}
+          className="w-full h-32 md:h-48 object-cover rounded-t-lg"
+        />
+        <div className="mt-10 mb-10"></div>
+          <img
+          src={
+            eventData?.images && eventData.images.length > 0
+              ? eventData.images[1]
+              : image1
+          }
+          alt={eventData?.name || "Event Image"}
+          className="w-full h-32 md:h-48 object-cover rounded-t-lg"
+        />
       </div>
     </div>
   </div>
@@ -252,7 +272,7 @@ const EventDetails = (key, event) => {
             onChange={handleNumTicketsChange}
             className="border rounded-md p-2 mx-2"
           >
-            {[1, 2, 3, 4, 5].map((option) => (
+            {[0, 1, 2, 3, 4, 5].map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>

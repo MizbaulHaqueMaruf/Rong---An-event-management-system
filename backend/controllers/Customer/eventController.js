@@ -19,6 +19,9 @@ const getEvents = async (req, res) => {
 
 const searchEvents = async (req, res) => {
     const searchKey = req.params.key;
+    if(searchKey){
+      console.log(searchKey);
+    }
     try {
       // Searching events based on various fields using regular expressions
       const searched_events = await events.find({
@@ -29,6 +32,7 @@ const searchEvents = async (req, res) => {
           { orgName: { $regex: searchKey, $options: 'i' } },
         ],
       });
+      console.log(searched_events);
       res.json(searched_events);
     } catch (error) {
       res.status(500).json({ error: error.message });
