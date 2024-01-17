@@ -59,12 +59,9 @@ const ProfileOrders = ({ order }) => {
     }
   }
   const formatDate = (dateString) => {
-    if (dateString) {
-      return new Date(dateString).toString().slice(0, 24);
-    } else {
-      // If date is not available, add a default or random date
-      return "Will be Updated";
-    }
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const eventDate = new Date(dateString);
+    return eventDate.toLocaleDateString('bn-BD', options);
   };
 
   useEffect(() => {
