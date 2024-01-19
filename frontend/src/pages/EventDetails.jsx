@@ -34,6 +34,7 @@ const EventDetails = (key, event) => {
         totalAmount: totalPrice+ platformBill,
         platformCharge: platformBill,
         orderId:order._id,
+        discount:eventData?.discount
     }
     console.log(body);
     const headers = {

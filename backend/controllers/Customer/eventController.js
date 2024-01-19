@@ -139,8 +139,9 @@ const deleteOrder = async (req, res) => {
 const initiatePayment = async (req, res) => {
 
   try{
-  const {eventTitle, unitPrice, orderId, platformCharge,numberOfTickets,totalAmount,eventId, sellerId, customerId} = req.body;
+  const {eventTitle, unitPrice, orderId, platformCharge,numberOfTickets,totalAmount,eventId, sellerId, customerId, discount} = req.body;
   console.log(req.body);
+  const discountAmount = Math.ceil(unitPrice*discount/100);
   const transactionId = generateRandomId();
   console.log(transactionId);
   const line_items = [
@@ -150,7 +151,7 @@ const initiatePayment = async (req, res) => {
         product_data: {
           name: eventTitle,
         },
-        unit_amount: unitPrice*100,
+        unit_amount: (unitPrice-discountAmount)*100,
       },
       quantity: numberOfTickets,
     },
